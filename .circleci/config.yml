@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: hairyhenderson/gomplate-ci-build:latest
+    working_directory: /go/src/github.com/hairyhenderson/go-codeowners
+    steps:
+      - checkout
+      - run: go get -t -v
+      - run:
+          name: test
+          command: |
+            trap "go-junit-report < ./go-test.out > ./report.xml" EXIT
+            go test | tee ./go-test.out
+      - store_test_results:
+          path: /tmp/test-results
