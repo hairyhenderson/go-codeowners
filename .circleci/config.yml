@@ -10,7 +10,7 @@ jobs:
       - run:
           name: test
           command: |
-            trap "go-junit-report < ./go-test.out > ./report.xml" EXIT
-            go test | tee ./go-test.out
+            trap "go-junit-report < test-results/go-test.out > test-results/report.xml" EXIT
+            go test | tee test-results/go-test.out
       - store_test_results:
-          path: /tmp/test-results
+          path: test-results
