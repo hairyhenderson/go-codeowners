@@ -9,9 +9,9 @@ jobs:
       - run: go get -t -v
       - run: mkdir -p test-results
       - run:
-          name: test
+          name: go test
           command: |
-            trap "go-junit-report < test-results/go-test.out > test-results/report.xml" EXIT
-            go test | tee test-results/go-test.out
+            trap "go-junit-report < /tmp/test-results/go-test.out > /tmp/test-results/report.xml" EXIT
+            go test -v -race ./... | tee /tmp/test-results/go-test.out
       - store_test_results:
-          path: test-results
+          path: /tmp/test-results
