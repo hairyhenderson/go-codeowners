@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/master.svg?style=svg)](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/master)
+
 # go-codeowners
 
 A package that finds and parses [`CODEOWNERS`](https://help.github.com/articles/about-codeowners/) files.
