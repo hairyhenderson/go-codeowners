@@ -1,9 +1,10 @@
-version: 2
+version: 2.1
+
 jobs:
   build:
     docker:
       - image: hairyhenderson/gomplate-ci-build:latest
-    working_directory: /go/src/github.com/hairyhenderson/go-codeowners
+    working_directory: /src/go-codeowners
     steps:
       - checkout
       - run: go get -t -v
@@ -15,3 +16,8 @@ jobs:
             go test -v -race ./... | tee /tmp/test-results/go-test.out
       - store_test_results:
           path: /tmp/test-results
+
+workflows:
+  build:
+    jobs:
+      - build
