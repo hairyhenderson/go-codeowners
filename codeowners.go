@@ -37,7 +37,7 @@ var fs = afero.NewOsFs()
 func findCodeownersFile(wd string) (io.Reader, string, error) {
 	dir := wd
 	for {
-		for _, p := range []string{".", "docs", ".github"} {
+		for _, p := range []string{".", "docs", ".github", ".gitlab"} {
 			pth := path.Join(dir, p)
 			exists, err := afero.DirExists(fs, pth)
 			if err != nil {

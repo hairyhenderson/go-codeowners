@@ -10,7 +10,7 @@ Features:
   present at the repo's root)
 - can be called from within a repo (doesn't have to be at the root)
 - will find `CODEOWNERS` files in all documented locations: the repo's root,
-  `docs/`, and `.github/`
+  `docs/`, and `.github/` (or `.gitlab/` for GitLab repos)
 
 ## Usage
 
