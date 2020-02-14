@@ -7,12 +7,10 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"sort"
+	"regexp"
 	"strings"
 
 	"github.com/spf13/afero"
-
-	gitignore "github.com/sabhiram/go-gitignore"
 )
 
 // Codeowners - patterns/owners mappings for the given repo
@@ -24,7 +22,7 @@ type Codeowners struct {
 // Codeowner - owners for a given pattern
 type Codeowner struct {
 	pattern string
-	ig      *gitignore.GitIgnore
+	re      *regexp.Regexp
 	owners  []string
 }
 
@@ -84,12 +82,12 @@ func NewCodeowners(path string) (*Codeowners, error) {
 	co := &Codeowners{
 		repoRoot: root,
 	}
-	co.patterns, err = parseCodeowners(r)
+	co.patterns = parseCodeowners(r)
 	return co, nil
 }
 
-// parseCodeowners -
-func parseCodeowners(r io.Reader) ([]Codeowner, error) {
+// parseCodeowners parses a list of Codeowners from a Reader
+func parseCodeowners(r io.Reader) []Codeowner {
 	co := []Codeowner{}
 	s := bufio.NewScanner(r)
 	for s.Scan() {
@@ -98,69 +96,91 @@ func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 			continue
 		}
 		if len(fields) > 1 {
-			// for CODEOWNERS, * means all files, recursively
-			// this differs from gitignore rules
-			if fields[0] == "*" {
-				fields[0] = "**"
-			}
-			c, err := NewCodeowner(fields[0], fields[1:])
-			if err != nil {
-				return nil, err
-			}
+			c, _ := NewCodeowner(fields[0], fields[1:])
 			co = append(co, c)
 		}
 	}
-	return co, nil
+	return co
 }
 
 // NewCodeowner -
 func NewCodeowner(pattern string, owners []string) (Codeowner, error) {
-	ig, err := gitignore.CompileIgnoreLines(pattern)
-	if err != nil {
-		return Codeowner{}, err
-	}
+	re := getPattern(pattern)
 	c := Codeowner{
 		pattern: pattern,
-		ig:      ig,
+		re:      re,
 		owners:  owners,
 	}
-	// fmt.Printf("NewCodeowner: %#v\n", c)
-	return c, err
+	return c, nil
 }
 
 // Owners - return the list of code owners for the given path
 // (within the repo root)
 func (c *Codeowners) Owners(path string) []string {
-	sort.Slice(c.patterns, sortPatterns(c.patterns))
 	if strings.HasPrefix(path, c.repoRoot) {
 		path = strings.Replace(path, c.repoRoot, "", 1)
 	}
-	for _, p := range c.patterns {
-		if p.ig.MatchesPath(path) {
+
+	// Order is important; the last matching pattern takes the most precedence.
+	for i := len(c.patterns) - 1; i >= 0; i-- {
+		p := c.patterns[i]
+
+		if p.re.MatchString(path) {
 			return p.owners
 		}
 	}
+
 	return nil
 }
 
-// returns a sort function to put the most-specific patterns first for
-// consideration.
-//
-// e.g. foo/bar is more specific than foo/*
-func sortPatterns(pats []Codeowner) func(i, j int) bool {
-	return func(i, j int) bool {
-		pi := pats[i].pattern
-		pj := pats[j].pattern
-		li := len(pi)
-		lj := len(pj)
-		if li > lj {
-			return true
-		}
-		if li == lj {
-			si := strings.Count(pi, "*")
-			sj := strings.Count(pj, "*")
-			return si < sj
-		}
-		return false
+// based on github.com/sabhiram/go-gitignore
+// but modified so that 'dir/*' only matches files in 'dir/'
+func getPattern(line string) *regexp.Regexp {
+	// when # or ! is escaped with a \
+	if regexp.MustCompile(`^(\\#|\\!)`).MatchString(line) {
+		line = line[1:]
 	}
+
+	// If we encounter a foo/*.blah in a folder, prepend the / char
+	if regexp.MustCompile(`([^\/+])/.*\*\.`).MatchString(line) && line[0] != '/' {
+		line = "/" + line
+	}
+
+	// Handle escaping the "." char
+	line = regexp.MustCompile(`\.`).ReplaceAllString(line, `\.`)
+
+	magicStar := "#$~"
+
+	// Handle "/**/" usage
+	if strings.HasPrefix(line, "/**/") {
+		line = line[1:]
+	}
+	line = regexp.MustCompile(`/\*\*/`).ReplaceAllString(line, `(/|/.+/)`)
+	line = regexp.MustCompile(`\*\*/`).ReplaceAllString(line, `(|.`+magicStar+`/)`)
+	line = regexp.MustCompile(`/\*\*`).ReplaceAllString(line, `(|/.`+magicStar+`)`)
+
+	// Handle escaping the "*" char
+	line = regexp.MustCompile(`\\\*`).ReplaceAllString(line, `\`+magicStar)
+	line = regexp.MustCompile(`\*`).ReplaceAllString(line, `([^/]*)`)
+
+	// Handle escaping the "?" char
+	line = strings.Replace(line, "?", `\?`, -1)
+
+	line = strings.Replace(line, magicStar, "*", -1)
+
+	// Temporary regex
+	var expr = ""
+	if strings.HasSuffix(line, "/") {
+		expr = line + "(|.*)$"
+	} else {
+		expr = line + "$"
+	}
+	if strings.HasPrefix(expr, "/") {
+		expr = "^(|/)" + expr[1:]
+	} else {
+		expr = "^(|.*/)" + expr
+	}
+	pattern, _ := regexp.Compile(expr)
+
+	return pattern
 }
