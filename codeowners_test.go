@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path"
 	"runtime"
+	"strings"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -17,6 +18,8 @@ var (
 	sample = `# comment
 *	@everyone
 
+   foobar/  someone@else.com
+
 docs/**	@org/docteam @joe`
 	sample2 = `* @hairyhenderson`
 	sample3 = `baz/* @baz @qux`
@@ -25,11 +28,12 @@ docs/**	@org/docteam @joe`
 )
 
 func TestParseCodeowners(t *testing.T) {
+	t.Parallel()
 	r := bytes.NewBufferString(sample)
-	c, err := parseCodeowners(r)
-	assert.NoError(t, err)
+	c := parseCodeowners(r)
 	expected := []Codeowner{
-		co("**", []string{"@everyone"}),
+		co("*", []string{"@everyone"}),
+		co("foobar/", []string{"someone@else.com"}),
 		co("docs/**", []string{"@org/docteam", "@joe"}),
 	}
 	assert.Equal(t, expected, c)
@@ -40,7 +44,7 @@ func BenchmarkParseCodeowners(b *testing.B) {
 	var c []Codeowner
 
 	for n := 0; n < b.N; n++ {
-		c, _ = parseCodeowners(r)
+		c = parseCodeowners(r)
 	}
 
 	codeowners = c
@@ -52,18 +56,18 @@ func TestFindCodeownersFile(t *testing.T) {
 		fs = oldfs
 	}()
 	fs = afero.NewMemMapFs()
-	fs.Mkdir("/src/.github", 0755)
-	fs.MkdirAll("/src/foo/bar/baz", 0755)
-	fs.MkdirAll("/src/foo/qux/docs", 0755)
-	fs.MkdirAll("/src/foo/qux/quux", 0755)
+	_ = fs.Mkdir("/src/.github", 0755)
+	_ = fs.MkdirAll("/src/foo/bar/baz", 0755)
+	_ = fs.MkdirAll("/src/foo/qux/docs", 0755)
+	_ = fs.MkdirAll("/src/foo/qux/quux", 0755)
 	f, _ := fs.Create("/src/.github/CODEOWNERS")
-	f.WriteString(sample)
+	_, _ = f.WriteString(sample)
 
 	f, _ = fs.Create("/src/foo/CODEOWNERS")
-	f.WriteString(sample2)
+	_, _ = f.WriteString(sample2)
 
 	f, _ = fs.Create("/src/foo/qux/docs/CODEOWNERS")
-	f.WriteString(sample3)
+	_, _ = f.WriteString(sample3)
 
 	r, root, err := findCodeownersFile("/src")
 	assert.NoError(t, err)
@@ -92,7 +96,7 @@ func TestFindCodeownersFile(t *testing.T) {
 		assert.Equal(t, sample3, string(b))
 	}
 
-	r, root, err = findCodeownersFile("/")
+	r, _, err = findCodeownersFile("/")
 	assert.NoError(t, err)
 	assert.Nil(t, r)
 }
@@ -105,6 +109,116 @@ func co(pattern string, owners []string) Codeowner {
 	return c
 }
 
+func TestFullParseCodeowners(t *testing.T) {
+	t.Parallel()
+	// based on https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
+	// with a few unimportant modifications
+	example := `# This is a comment.
+# Each line is a file pattern followed by one or more owners.
+
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# @global-owner1 and @global-owner2 will be requested for
+# review when someone opens a pull request.
+*       @global-owner1 @global-owner2
+
+# Order is important; the last matching pattern takes the most
+# precedence. When someone opens a pull request that only
+# modifies JS files, only @js-owner and not the global
+# owner(s) will be requested for a review.
+*.js	@js-owner
+
+# You can also use email addresses if you prefer. They'll be
+# used to look up users just like we do for commit author
+# emails.
+*.go docs@example.com
+
+# In this example, @doctocat owns any files in the build/logs
+# directory at the root of the repository and any of its
+# subdirectories.
+/build/logs/ @doctocat
+
+# The 'docs/*' pattern will match files like
+# 'docs/getting-started.md' but not further nested files like
+# 'docs/build-app/troubleshooting.md'.
+docs/*  docs@example.com
+
+# In this example, @octocat owns any file in an apps directory
+# anywhere in your repository.
+apps/ @octocat
+
+# In this example, @doctocat owns any file in the '/docs'
+# directory in the root of your repository.
+/docs/ @doctocat
+
+  foobar/ @fooowner
+
+\#foo/ @hashowner
+
+docs/*.md @mdowner
+`
+	c := parseCodeowners(strings.NewReader(example))
+	codeowners := &Codeowners{
+		repoRoot: "/build",
+		patterns: c,
+	}
+
+	// these tests were ported from https://github.com/softprops/codeowners
+	data := []struct {
+		path   string
+		owners []string
+	}{
+		{"#foo/bar.go",
+			[]string{"@hashowner"}},
+		{"foobar/baz.go",
+			[]string{"@fooowner"}},
+		{"/docs/README.md",
+			[]string{"@mdowner"}},
+		// XXX: uncertain about this one
+		{"blah/docs/README.md",
+			[]string{"docs@example.com"}},
+		{"foo.txt",
+			[]string{"@global-owner1", "@global-owner2"}},
+		{"foo/bar.txt",
+			[]string{"@global-owner1", "@global-owner2"}},
+		{"foo.js",
+			[]string{"@js-owner"}},
+		{"foo/bar.js",
+			[]string{"@js-owner"}},
+		{"foo.go",
+			[]string{"docs@example.com"}},
+		{"foo/bar.go",
+			[]string{"docs@example.com"}},
+		// relative to root
+		{"build/logs/foo.go",
+			[]string{"@doctocat"}},
+		{"build/logs/foo/bar.go",
+			[]string{"@doctocat"}},
+		// not relative to root
+		{"foo/build/logs/foo.go",
+			[]string{"docs@example.com"}},
+		// docs anywhere
+		{"foo/docs/foo.js",
+			[]string{"docs@example.com"}},
+		{"foo/bar/docs/foo.js",
+			[]string{"docs@example.com"}},
+		// but not nested
+		{"foo/bar/docs/foo/foo.js",
+			[]string{"@js-owner"}},
+		{"foo/apps/foo.js",
+			[]string{"@octocat"}},
+		{"docs/foo.js",
+			[]string{"@doctocat"}},
+		{"/docs/foo.js",
+			[]string{"@doctocat"}},
+	}
+
+	for _, d := range data {
+		t.Run(fmt.Sprintf("%q==%#v", d.path, d.owners), func(t *testing.T) {
+			assert.EqualValues(t, d.owners, codeowners.Owners(d.path))
+		})
+	}
+}
 func TestOwners(t *testing.T) {
 	foo := []string{"@foo"}
 	bar := []string{"@bar"}
@@ -114,18 +228,28 @@ func TestOwners(t *testing.T) {
 		path     string
 		expected []string
 	}{
+		{[]Codeowner{co("a/*", foo)}, "c/b", nil},
 		{[]Codeowner{co("**", foo)}, "a/b", foo},
 		{[]Codeowner{co("**", foo), co("a/b/*", bar)}, "a/b/c", bar},
 		{[]Codeowner{co("**", foo), co("a/b/*", bar), co("a/b/c", baz)}, "a/b/c", baz},
-		{[]Codeowner{co("**", foo), co("a/b/*", bar), co("a/*/c", baz)}, "a/b/c", bar},
-		{[]Codeowner{co("**", foo), co("a/b/*", bar), co("a/b/", baz)}, "a/b/bar", bar},
-		{[]Codeowner{co("**", foo), co("/a/b/*", bar), co("a/b/", baz)}, "/someroot/a/b/bar", bar},
+		{[]Codeowner{co("**", foo), co("a/*/c", bar), co("a/b/*", baz)}, "a/b/c", baz},
+		{[]Codeowner{co("**", foo), co("a/b/*", bar), co("a/b/", baz)}, "a/b/bar", baz},
+		{[]Codeowner{co("**", foo), co("a/b/*", bar), co("a/b/", baz)}, "/someroot/a/b/bar", baz},
+		{[]Codeowner{
+			co("*", foo),
+			co("/a/*", bar),
+			co("/b/**", baz)}, "/a/aa/file", foo},
+		{[]Codeowner{
+			co("*", foo),
+			co("/a/**", bar)}, "/a/bb/file", bar},
 	}
 
 	for _, d := range data {
-		c := &Codeowners{patterns: d.patterns, repoRoot: "/someroot"}
-		owners := c.Owners(d.path)
-		assert.Equal(t, d.expected, owners)
+		t.Run(fmt.Sprintf("%s==%s", d.path, d.expected), func(t *testing.T) {
+			c := &Codeowners{patterns: d.patterns, repoRoot: "/someroot"}
+			owners := c.Owners(d.path)
+			assert.Equal(t, d.expected, owners)
+		})
 	}
 }
 
@@ -139,7 +263,7 @@ func ExampleNewCodeowners() {
 	c, _ := NewCodeowners(cwd())
 	fmt.Println(c.patterns[0])
 	// Output:
-	// **	@hairyhenderson
+	// *	@hairyhenderson
 }
 
 func ExampleCodeowners_Owners() {
