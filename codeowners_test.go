@@ -156,6 +156,9 @@ apps/ @octocat
 \#foo/ @hashowner
 
 docs/*.md @mdowner
+
+# this example tests an escaped space in the path
+space/test\ space/ @spaceowner
 `
 	c := parseCodeowners(strings.NewReader(example))
 	codeowners := &Codeowners{
@@ -211,6 +214,8 @@ docs/*.md @mdowner
 			[]string{"@doctocat"}},
 		{"/docs/foo.js",
 			[]string{"@doctocat"}},
+		{"/space/test space/doc1.txt",
+			[]string{"@spaceowner"}},
 	}
 
 	for _, d := range data {
@@ -249,6 +254,25 @@ func TestOwners(t *testing.T) {
 			c := &Codeowners{patterns: d.patterns, repoRoot: "/someroot"}
 			owners := c.Owners(d.path)
 			assert.Equal(t, d.expected, owners)
+		})
+	}
+}
+
+func TestCombineEscapedSpaces(t *testing.T) {
+	data := []struct {
+		fields   []string
+		expected []string
+	}{
+		{[]string{"docs/", "@owner"}, []string{"docs/", "@owner"}},
+		{[]string{"docs/bob/**", "@owner"}, []string{"docs/bob/**", "@owner"}},
+		{[]string{"docs/bob\\", "test/", "@owner"}, []string{"docs/bob test/", "@owner"}},
+		{[]string{"docs/bob\\", "test/sub/final\\", "space/", "@owner"}, []string{"docs/bob test/sub/final space/", "@owner"}},
+		{[]string{"docs/bob\\", "test/another\\", "test/**", "@owner"}, []string{"docs/bob test/another test/**", "@owner"}},
+	}
+
+	for _, d := range data {
+		t.Run(fmt.Sprintf("%s==%s", d.fields, d.expected), func(t *testing.T) {
+			assert.Equal(t, d.expected, combineEscapedSpaces(d.fields))
 		})
 	}
 }
