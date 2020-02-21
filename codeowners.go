@@ -96,11 +96,29 @@ func parseCodeowners(r io.Reader) []Codeowner {
 			continue
 		}
 		if len(fields) > 1 {
+			fields = combineEscapedSpaces(fields)
 			c, _ := NewCodeowner(fields[0], fields[1:])
 			co = append(co, c)
 		}
 	}
 	return co
+}
+
+// if any of the elements ends with a \, it was an escaped space
+// put it back together properly so it's not treated as separate fields
+func combineEscapedSpaces(fields []string) []string {
+	outFields := make([]string, 0)
+	escape := `\`
+	for i := 0; i < len(fields); i++ {
+		outField := fields[i]
+		for strings.HasSuffix(fields[i], escape) && i+1 < len(fields) {
+			outField = strings.Join([]string{strings.TrimRight(outField, escape), fields[i+1]}, " ")
+			i++
+		}
+		outFields = append(outFields, outField)
+	}
+
+	return outFields
 }
 
 // NewCodeowner -
