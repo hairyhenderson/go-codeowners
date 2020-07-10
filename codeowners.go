@@ -70,7 +70,7 @@ func findCodeownersFile(wd string) (io.Reader, string, error) {
 	return nil, "", nil
 }
 
-// NewCodeowners -
+// NewCodeowners creates a Codeowners from the path to a local file.
 func NewCodeowners(path string) (*Codeowners, error) {
 	r, root, err := findCodeownersFile(path)
 	if err != nil {
@@ -79,8 +79,13 @@ func NewCodeowners(path string) (*Codeowners, error) {
 	if r == nil {
 		return nil, fmt.Errorf("No CODEOWNERS found in %s", path)
 	}
+	return NewCodeownersFromReader(r, root)
+}
+
+// NewCodeownersFromReader creates a Codeowners from a given Reader instance and root path.
+func NewCodeownersFromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
 	co := &Codeowners{
-		repoRoot: root,
+		repoRoot: repoRoot,
 	}
 	co.patterns = parseCodeowners(r)
 	return co, nil
