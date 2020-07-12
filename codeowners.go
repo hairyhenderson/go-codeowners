@@ -70,8 +70,13 @@ func findCodeownersFile(wd string) (io.Reader, string, error) {
 	return nil, "", nil
 }
 
-// NewCodeowners creates a Codeowners from the path to a local file.
+// Deprecated: Use FromFile(path) instead.
 func NewCodeowners(path string) (*Codeowners, error) {
+	return FromFile(path)
+}
+
+// FromFile creates a Codeowners from the path to a local file.
+func FromFile(path string) (*Codeowners, error) {
 	r, root, err := findCodeownersFile(path)
 	if err != nil {
 		return nil, err
@@ -79,11 +84,11 @@ func NewCodeowners(path string) (*Codeowners, error) {
 	if r == nil {
 		return nil, fmt.Errorf("No CODEOWNERS found in %s", path)
 	}
-	return NewCodeownersFromReader(r, root)
+	return FromReader(r, root)
 }
 
-// NewCodeownersFromReader creates a Codeowners from a given Reader instance and root path.
-func NewCodeownersFromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
+// FromReader creates a Codeowners from a given Reader instance and root path.
+func FromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
 	co := &Codeowners{
 		repoRoot: repoRoot,
 	}
