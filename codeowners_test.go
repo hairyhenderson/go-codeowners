@@ -292,7 +292,7 @@ func ExampleFromFile() {
 
 func ExampleFromReader() {
 	reader := strings.NewReader(sample2)
-	c, _ := FromReader(reader)
+	c, _ := FromReader(reader, "")
 	fmt.Println(c.patterns[0])
 	// Output:
 	// *	@hairyhenderson
