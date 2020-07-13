@@ -283,15 +283,23 @@ func cwd() string {
 	return cwd
 }
 
-func ExampleNewCodeowners() {
-	c, _ := NewCodeowners(cwd())
+func ExampleFromFile() {
+	c, _ := FromFile(cwd())
+	fmt.Println(c.patterns[0])
+	// Output:
+	// *	@hairyhenderson
+}
+
+func ExampleFromReader() {
+	reader := strings.NewReader(sample2)
+	c, _ := FromReader(reader)
 	fmt.Println(c.patterns[0])
 	// Output:
 	// *	@hairyhenderson
 }
 
 func ExampleCodeowners_Owners() {
-	c, _ := NewCodeowners(cwd())
+	c, _ := FromFile(cwd())
 	owners := c.Owners("README.md")
 	for i, o := range owners {
 		fmt.Printf("Owner #%d is %s\n", i, o)
