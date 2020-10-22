@@ -26,6 +26,16 @@ type Codeowner struct {
 	owners  []string
 }
 
+// Pattern - returns the path pattern
+func (c Codeowner) Pattern() string {
+	return c.pattern
+}
+
+// Owners - returns the list of code owners
+func (c Codeowner) Owners() []string {
+	return c.owners
+}
+
 func (c Codeowner) String() string {
 	return fmt.Sprintf("%s\t%v", c.pattern, strings.Join(c.owners, ", "))
 }
@@ -140,6 +150,11 @@ func NewCodeowner(pattern string, owners []string) (Codeowner, error) {
 		owners:  owners,
 	}
 	return c, nil
+}
+
+// Patterns - return the list of path patterns with their code owners
+func (c *Codeowners) Patterns() []Codeowner {
+	return c.patterns
 }
 
 // Owners - return the list of code owners for the given path

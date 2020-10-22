@@ -27,6 +27,18 @@ docs/**	@org/docteam @joe`
 	codeowners []Codeowner
 )
 
+func TestCodeownerPattern(t *testing.T) {
+	pattern := "**"
+	c := co(pattern, []string{"@foo"})
+	assert.Equal(t, pattern, c.Pattern())
+}
+
+func TestCodeownerOwners(t *testing.T) {
+	foo := []string{"@foo"}
+	c := co("**", foo)
+	assert.Equal(t, foo, c.Owners())
+}
+
 func TestParseCodeowners(t *testing.T) {
 	t.Parallel()
 	r := bytes.NewBufferString(sample)
@@ -224,6 +236,13 @@ space/test\ space/ @spaceowner
 		})
 	}
 }
+
+func TestPatterns(t *testing.T) {
+	patterns := []Codeowner{co("**", []string{"@foo"}), co("a/b/*", []string{"@bar"})}
+	c := &Codeowners{patterns: patterns, repoRoot: "/someroot"}
+	assert.Equal(t, patterns, c.Patterns())
+}
+
 func TestOwners(t *testing.T) {
 	foo := []string{"@foo"}
 	bar := []string{"@bar"}
