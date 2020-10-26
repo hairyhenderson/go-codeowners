@@ -16,28 +16,18 @@ import (
 // Codeowners - patterns/owners mappings for the given repo
 type Codeowners struct {
 	repoRoot string
-	patterns []Codeowner
+	Patterns []Codeowner
 }
 
 // Codeowner - owners for a given pattern
 type Codeowner struct {
-	pattern string
+	Pattern string
 	re      *regexp.Regexp
-	owners  []string
-}
-
-// Pattern - returns the path pattern
-func (c Codeowner) Pattern() string {
-	return c.pattern
-}
-
-// Owners - returns the list of code owners
-func (c Codeowner) Owners() []string {
-	return c.owners
+	Owners  []string
 }
 
 func (c Codeowner) String() string {
-	return fmt.Sprintf("%s\t%v", c.pattern, strings.Join(c.owners, ", "))
+	return fmt.Sprintf("%s\t%v", c.Pattern, strings.Join(c.Owners, ", "))
 }
 
 var fs = afero.NewOsFs()
@@ -102,7 +92,7 @@ func FromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
 	co := &Codeowners{
 		repoRoot: repoRoot,
 	}
-	co.patterns = parseCodeowners(r)
+	co.Patterns = parseCodeowners(r)
 	return co, nil
 }
 
@@ -145,16 +135,11 @@ func combineEscapedSpaces(fields []string) []string {
 func NewCodeowner(pattern string, owners []string) (Codeowner, error) {
 	re := getPattern(pattern)
 	c := Codeowner{
-		pattern: pattern,
+		Pattern: pattern,
 		re:      re,
-		owners:  owners,
+		Owners:  owners,
 	}
 	return c, nil
-}
-
-// Patterns - return the list of path patterns with their code owners
-func (c *Codeowners) Patterns() []Codeowner {
-	return c.patterns
 }
 
 // Owners - return the list of code owners for the given path
@@ -165,11 +150,11 @@ func (c *Codeowners) Owners(path string) []string {
 	}
 
 	// Order is important; the last matching pattern takes the most precedence.
-	for i := len(c.patterns) - 1; i >= 0; i-- {
-		p := c.patterns[i]
+	for i := len(c.Patterns) - 1; i >= 0; i-- {
+		p := c.Patterns[i]
 
 		if p.re.MatchString(path) {
-			return p.owners
+			return p.Owners
 		}
 	}
 
