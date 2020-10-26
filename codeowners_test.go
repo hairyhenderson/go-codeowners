@@ -163,7 +163,7 @@ space/test\ space/ @spaceowner
 	c := parseCodeowners(strings.NewReader(example))
 	codeowners := &Codeowners{
 		repoRoot: "/build",
-		patterns: c,
+		Patterns: c,
 	}
 
 	// these tests were ported from https://github.com/softprops/codeowners
@@ -224,6 +224,7 @@ space/test\ space/ @spaceowner
 		})
 	}
 }
+
 func TestOwners(t *testing.T) {
 	foo := []string{"@foo"}
 	bar := []string{"@bar"}
@@ -251,7 +252,7 @@ func TestOwners(t *testing.T) {
 
 	for _, d := range data {
 		t.Run(fmt.Sprintf("%s==%s", d.path, d.expected), func(t *testing.T) {
-			c := &Codeowners{patterns: d.patterns, repoRoot: "/someroot"}
+			c := &Codeowners{Patterns: d.patterns, repoRoot: "/someroot"}
 			owners := c.Owners(d.path)
 			assert.Equal(t, d.expected, owners)
 		})
@@ -285,7 +286,7 @@ func cwd() string {
 
 func ExampleFromFile() {
 	c, _ := FromFile(cwd())
-	fmt.Println(c.patterns[0])
+	fmt.Println(c.Patterns[0])
 	// Output:
 	// *	@hairyhenderson
 }
@@ -293,7 +294,7 @@ func ExampleFromFile() {
 func ExampleFromReader() {
 	reader := strings.NewReader(sample2)
 	c, _ := FromReader(reader, "")
-	fmt.Println(c.patterns[0])
+	fmt.Println(c.Patterns[0])
 	// Output:
 	// *	@hairyhenderson
 }
