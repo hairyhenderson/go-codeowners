@@ -168,59 +168,65 @@ space/test\ space/ @spaceowner
 
 	// these tests were ported from https://github.com/softprops/codeowners
 	data := []struct {
-		path   string
-		owners []string
+		path        string
+		owners      []string
+		localOwners []string
 	}{
 		{"#foo/bar.go",
-			[]string{"@hashowner"}},
+			[]string{"@hashowner"},
+			[]string{"@hashowner"},
+		},
 		{"foobar/baz.go",
-			[]string{"@fooowner"}},
+			[]string{"@fooowner"}, []string{"@fooowner"}},
 		{"/docs/README.md",
-			[]string{"@mdowner"}},
+			[]string{"@mdowner"}, []string{"@mdowner"}},
 		// XXX: uncertain about this one
 		{"blah/docs/README.md",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		{"foo.txt",
-			[]string{"@global-owner1", "@global-owner2"}},
+			[]string{"@global-owner1", "@global-owner2"}, nil},
 		{"foo/bar.txt",
-			[]string{"@global-owner1", "@global-owner2"}},
+			[]string{"@global-owner1", "@global-owner2"}, nil},
 		{"foo.js",
-			[]string{"@js-owner"}},
+			[]string{"@js-owner"}, []string{"@js-owner"}},
 		{"foo/bar.js",
-			[]string{"@js-owner"}},
+			[]string{"@js-owner"}, []string{"@js-owner"}},
 		{"foo.go",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		{"foo/bar.go",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		// relative to root
 		{"build/logs/foo.go",
-			[]string{"@doctocat"}},
+			[]string{"@doctocat"}, []string{"@doctocat"}},
 		{"build/logs/foo/bar.go",
-			[]string{"@doctocat"}},
+			[]string{"@doctocat"}, []string{"@doctocat"}},
 		// not relative to root
 		{"foo/build/logs/foo.go",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		// docs anywhere
 		{"foo/docs/foo.js",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		{"foo/bar/docs/foo.js",
-			[]string{"docs@example.com"}},
+			[]string{"docs@example.com"}, []string{"docs@example.com"}},
 		// but not nested
 		{"foo/bar/docs/foo/foo.js",
-			[]string{"@js-owner"}},
+			[]string{"@js-owner"}, []string{"@js-owner"}},
 		{"foo/apps/foo.js",
-			[]string{"@octocat"}},
+			[]string{"@octocat"}, []string{"@octocat"}},
 		{"docs/foo.js",
-			[]string{"@doctocat"}},
+			[]string{"@doctocat"}, []string{"@doctocat"}},
 		{"/docs/foo.js",
-			[]string{"@doctocat"}},
+			[]string{"@doctocat"}, []string{"@doctocat"}},
 		{"/space/test space/doc1.txt",
-			[]string{"@spaceowner"}},
+			[]string{"@spaceowner"}, []string{"@spaceowner"}},
 	}
 
 	for _, d := range data {
 		t.Run(fmt.Sprintf("%q==%#v", d.path, d.owners), func(t *testing.T) {
 			assert.EqualValues(t, d.owners, codeowners.Owners(d.path))
+		})
+		t.Run(fmt.Sprintf("%q==%#v", d.path, d.localOwners), func(t *testing.T) {
+			assert.EqualValues(t, d.localOwners, codeowners.LocalOwners(d.path))
 		})
 	}
 }

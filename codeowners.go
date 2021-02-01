@@ -26,6 +26,11 @@ type Codeowner struct {
 	Owners  []string
 }
 
+// IsGlobal - tell whenever the owner is global
+func (c Codeowner) IsGlobal() bool {
+	return c.Pattern == "*"
+}
+
 func (c Codeowner) String() string {
 	return fmt.Sprintf("%s\t%v", c.Pattern, strings.Join(c.Owners, ", "))
 }
@@ -154,6 +159,26 @@ func (c *Codeowners) Owners(path string) []string {
 		p := c.Patterns[i]
 
 		if p.re.MatchString(path) {
+			return p.Owners
+		}
+	}
+
+	return nil
+}
+
+// LocalOwners - return the list of code owners for the given path
+// excluding the global owners
+// (within the repo root)
+func (c *Codeowners) LocalOwners(path string) []string {
+	if strings.HasPrefix(path, c.repoRoot) {
+		path = strings.Replace(path, c.repoRoot, "", 1)
+	}
+
+	// Order is important; the last matching pattern takes the most precedence.
+	for i := len(c.Patterns) - 1; i >= 0; i-- {
+		p := c.Patterns[i]
+
+		if !p.IsGlobal() && p.re.MatchString(path) {
 			return p.Owners
 		}
 	}
