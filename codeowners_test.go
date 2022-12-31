@@ -8,10 +8,10 @@ import (
 	"runtime"
 	"strings"
 	"testing"
-
-	"github.com/spf13/afero"
+	"testing/fstest"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -51,53 +51,38 @@ func BenchmarkParseCodeowners(b *testing.B) {
 }
 
 func TestFindCodeownersFile(t *testing.T) {
-	oldfs := fs
-	defer func() {
-		fs = oldfs
-	}()
-	fs = afero.NewMemMapFs()
-	_ = fs.Mkdir("/src/.github", 0755)
-	_ = fs.MkdirAll("/src/foo/bar/baz", 0755)
-	_ = fs.MkdirAll("/src/foo/qux/docs", 0755)
-	_ = fs.MkdirAll("/src/foo/qux/quux", 0755)
-	f, _ := fs.Create("/src/.github/CODEOWNERS")
-	_, _ = f.WriteString(sample)
-
-	f, _ = fs.Create("/src/foo/CODEOWNERS")
-	_, _ = f.WriteString(sample2)
-
-	f, _ = fs.Create("/src/foo/qux/docs/CODEOWNERS")
-	_, _ = f.WriteString(sample3)
-
-	r, root, err := findCodeownersFile("/src")
-	assert.NoError(t, err)
-	assert.NotNil(t, r)
-	assert.Equal(t, "/src", root)
-	if r != nil {
-		b, _ := io.ReadAll(r)
-		assert.Equal(t, sample, string(b))
+	fsys := fstest.MapFS{
+		"src/.github/CODEOWNERS":      &fstest.MapFile{Data: []byte(sample)},
+		"src/foo/CODEOWNERS":          &fstest.MapFile{Data: []byte(sample2)},
+		"src/foo/qux/docs/CODEOWNERS": &fstest.MapFile{Data: []byte(sample3)},
 	}
 
-	r, root, err = findCodeownersFile("/src/foo/bar")
-	assert.NoError(t, err)
+	r, root, err := findCodeownersFile(fsys, "src")
+	require.NoError(t, err)
 	assert.NotNil(t, r)
-	assert.Equal(t, "/src/foo", root)
-	if r != nil {
-		b, _ := io.ReadAll(r)
-		assert.Equal(t, sample2, string(b))
-	}
+	assert.Equal(t, "src", root)
 
-	r, root, err = findCodeownersFile("/src/foo/qux/quux")
-	assert.NoError(t, err)
+	b, _ := io.ReadAll(r)
+	assert.Equal(t, sample, string(b))
+
+	r, root, err = findCodeownersFile(fsys, "src/foo/bar")
+	require.NoError(t, err)
 	assert.NotNil(t, r)
-	assert.Equal(t, "/src/foo/qux", root)
-	if r != nil {
-		b, _ := io.ReadAll(r)
-		assert.Equal(t, sample3, string(b))
-	}
+	assert.Equal(t, "src/foo", root)
 
-	r, _, err = findCodeownersFile("/")
-	assert.NoError(t, err)
+	b, _ = io.ReadAll(r)
+	assert.Equal(t, sample2, string(b))
+
+	r, root, err = findCodeownersFile(fsys, "src/foo/qux/quux")
+	require.NoError(t, err)
+	assert.NotNil(t, r)
+	assert.Equal(t, "src/foo/qux", root)
+
+	b, _ = io.ReadAll(r)
+	assert.Equal(t, sample3, string(b))
+
+	r, _, err = findCodeownersFile(fsys, ".")
+	require.NoError(t, err)
 	assert.Nil(t, r)
 }
 
