@@ -149,18 +149,16 @@ func (c *Codeowners) Owners(path string) []string {
 		path = strings.Replace(path, c.repoRoot, "", 1)
 	}
 
-	var owners []string
-
 	// Order is important; the last matching pattern takes the most precedence.
 	for i := len(c.Patterns) - 1; i >= 0; i-- {
 		p := c.Patterns[i]
 
 		if p.re.MatchString(path) {
-			owners = append(owners, p.Owners...)
+			return p.Owners
 		}
 	}
 
-	return owners
+	return nil
 }
 
 // based on github.com/sabhiram/go-gitignore
