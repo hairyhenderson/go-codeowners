@@ -25,7 +25,7 @@ To find the owner of the README.md file:
 import "github.com/hairyhenderson/go-codeowners"
 
 func main() {
-	c, _ := NewCodeowners(cwd())
+	c, _ := FromFile(cwd())
 	owners := c.Owners("README.md")
 	for i, o := range owners {
 		fmt.Printf("Owner #%d is %s\n", i, o)
