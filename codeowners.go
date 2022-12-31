@@ -2,15 +2,15 @@ package codeowners
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/spf13/afero"
 )
 
 // Codeowners - patterns/owners mappings for the given repo
@@ -30,29 +30,40 @@ func (c Codeowner) String() string {
 	return fmt.Sprintf("%s\t%v", c.Pattern, strings.Join(c.Owners, ", "))
 }
 
-var fs = afero.NewOsFs()
+func dirExists(fsys fs.FS, path string) (bool, error) {
+	fi, err := fs.Stat(fsys, path)
+	if err == nil && fi.IsDir() {
+		return true, nil
+	}
+
+	if errors.Is(err, fs.ErrNotExist) {
+		return false, nil
+	}
+
+	return false, err
+}
 
 // findCodeownersFile - find a CODEOWNERS file somewhere within or below
 // the working directory (wd), and open it.
-func findCodeownersFile(wd string) (io.Reader, string, error) {
+func findCodeownersFile(fsys fs.FS, wd string) (io.Reader, string, error) {
 	dir := wd
 	for {
 		for _, p := range []string{".", "docs", ".github", ".gitlab"} {
 			pth := path.Join(dir, p)
-			exists, err := afero.DirExists(fs, pth)
+			exists, err := dirExists(fsys, pth)
 			if err != nil {
 				return nil, "", err
 			}
 			if exists {
 				f := path.Join(pth, "CODEOWNERS")
-				_, err := fs.Stat(f)
+				_, err := fs.Stat(fsys, f)
 				if err != nil {
-					if os.IsNotExist(err) {
+					if errors.Is(err, fs.ErrNotExist) {
 						continue
 					}
 					return nil, "", err
 				}
-				r, err := fs.Open(f)
+				r, err := fsys.Open(f)
 				return r, dir, err
 			}
 		}
@@ -70,19 +81,32 @@ func findCodeownersFile(wd string) (io.Reader, string, error) {
 	return nil, "", nil
 }
 
-// Deprecated: Use FromFile(path) instead.
+// Deprecated: Use [FromFile] instead.
 func NewCodeowners(path string) (*Codeowners, error) {
 	return FromFile(path)
 }
 
-// FromFile creates a Codeowners from the path to a local file.
+// FromFile creates a Codeowners from the path to a local file. Consider using
+// [FromFileWithFS] instead.
 func FromFile(path string) (*Codeowners, error) {
-	r, root, err := findCodeownersFile(path)
+	base := "/"
+	if filepath.IsAbs(path) && filepath.VolumeName(path) != "" {
+		base = path[:len(filepath.VolumeName(path))+1]
+	}
+	path = path[len(base):]
+
+	return FromFileWithFS(os.DirFS(base), path)
+}
+
+// FromFileWithFS creates a Codeowners from the path to a file relative to the
+// given filesystem.
+func FromFileWithFS(fsys fs.FS, path string) (*Codeowners, error) {
+	r, root, err := findCodeownersFile(fsys, path)
 	if err != nil {
 		return nil, err
 	}
 	if r == nil {
-		return nil, fmt.Errorf("No CODEOWNERS found in %s", path)
+		return nil, fmt.Errorf("no CODEOWNERS found in %s", path)
 	}
 	return FromReader(r, root)
 }
