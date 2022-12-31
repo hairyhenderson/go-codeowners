@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"path"
 	"runtime"
 	"strings"
@@ -271,6 +272,16 @@ func cwd() string {
 
 func ExampleFromFile() {
 	c, _ := FromFile(cwd())
+	fmt.Println(c.Patterns[0])
+	// Output:
+	// *	@hairyhenderson
+}
+
+func ExampleFromFileWithFS() {
+	// open filesystem rooted at current working directory
+	fsys := os.DirFS(cwd())
+
+	c, _ := FromFileWithFS(fsys, ".")
 	fmt.Println(c.Patterns[0])
 	// Output:
 	// *	@hairyhenderson
