@@ -1,4 +1,5 @@
-[![CircleCI](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/main.svg?style=svg)](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/main)
+[![Go Reference][doc-image]][docs]
+[![Build][build-image]][build-url]
 
 # go-codeowners
 
@@ -32,8 +33,16 @@ func main() {
 }
 ```
 
+See the [docs][] for more information.
+
 ## License
 
 [The MIT License](http://opensource.org/licenses/MIT)
 
-Copyright (c) 2018 Dave Henderson
+Copyright (c) 2018-2022 Dave Henderson
+
+[docs]: https://pkg.go.dev/github.com/hairyhenderson/go-codeowners
+[doc-image]: https://pkg.go.dev/badge/github.com/hairyhenderson/go-codeowners.svg
+
+[build-image]: https://github.com/hairyhenderson/go-codeowners/actions/workflows/build.yml/badge.svg
+[build-url]: https://github.com/hairyhenderson/go-codeowners/actions/workflows/build.yml

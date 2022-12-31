@@ -3,7 +3,7 @@ package codeowners
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"path"
 	"runtime"
 	"strings"
@@ -74,7 +74,7 @@ func TestFindCodeownersFile(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.Equal(t, "/src", root)
 	if r != nil {
-		b, _ := ioutil.ReadAll(r)
+		b, _ := io.ReadAll(r)
 		assert.Equal(t, sample, string(b))
 	}
 
@@ -83,7 +83,7 @@ func TestFindCodeownersFile(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.Equal(t, "/src/foo", root)
 	if r != nil {
-		b, _ := ioutil.ReadAll(r)
+		b, _ := io.ReadAll(r)
 		assert.Equal(t, sample2, string(b))
 	}
 
@@ -92,7 +92,7 @@ func TestFindCodeownersFile(t *testing.T) {
 	assert.NotNil(t, r)
 	assert.Equal(t, "/src/foo/qux", root)
 	if r != nil {
-		b, _ := ioutil.ReadAll(r)
+		b, _ := io.ReadAll(r)
 		assert.Equal(t, sample3, string(b))
 	}
 
