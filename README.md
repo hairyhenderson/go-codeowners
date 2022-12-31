@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/master.svg?style=svg)](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/master)
+[![CircleCI](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/main.svg?style=svg)](https://circleci.com/gh/hairyhenderson/go-codeowners/tree/main)
 
 # go-codeowners
 
