@@ -129,6 +129,9 @@ func parseCodeowners(r io.Reader) []Codeowner {
 		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
 			continue
 		}
+		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields) -1], "]") {
+			continue
+		}
 		if len(fields) > 1 {
 			fields = combineEscapedSpaces(fields)
 			c, _ := NewCodeowner(fields[0], fields[1:])
