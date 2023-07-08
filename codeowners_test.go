@@ -24,6 +24,10 @@ var (
 docs/**	@org/docteam @joe`
 	sample2 = `* @hairyhenderson`
 	sample3 = `baz/* @baz @qux`
+	sample4 = `[test]
+*   @everyone
+[test2][2]
+*/foo @everyoneelse`
 
 	codeowners []Codeowner
 )
@@ -36,6 +40,17 @@ func TestParseCodeowners(t *testing.T) {
 		co("*", []string{"@everyone"}),
 		co("foobar/", []string{"someone@else.com"}),
 		co("docs/**", []string{"@org/docteam", "@joe"}),
+	}
+	assert.Equal(t, expected, c)
+}
+
+func TestParseCodeownersSections(t *testing.T) {
+	t.Parallel()
+	r := bytes.NewBufferString(sample4)
+	c := parseCodeowners(r)
+	expected := []Codeowner{
+		co("*", []string{"@everyone"}),
+		co("*/foo", []string{"@everyoneelse"}),
 	}
 	assert.Equal(t, expected, c)
 }
