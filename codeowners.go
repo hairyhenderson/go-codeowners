@@ -129,7 +129,7 @@ func parseCodeowners(r io.Reader) []Codeowner {
 		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
 			continue
 		}
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields) -1], "]") {
+		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields)-1], "]") {
 			continue
 		}
 		if len(fields) > 1 {
@@ -219,9 +219,9 @@ func getPattern(line string) *regexp.Regexp {
 	line = regexp.MustCompile(`\*`).ReplaceAllString(line, `([^/]*)`)
 
 	// Handle escaping the "?" char
-	line = strings.Replace(line, "?", `\?`, -1)
+	line = strings.ReplaceAll(line, "?", `\?`)
 
-	line = strings.Replace(line, magicStar, "*", -1)
+	line = strings.ReplaceAll(line, magicStar, "*")
 
 	// Temporary regex
 	var expr = ""
