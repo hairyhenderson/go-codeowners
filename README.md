@@ -39,7 +39,7 @@ See the [docs][] for more information.
 
 [The MIT License](http://opensource.org/licenses/MIT)
 
-Copyright (c) 2018-2022 Dave Henderson
+Copyright (c) 2018-2023 Dave Henderson
 
 [docs]: https://pkg.go.dev/github.com/hairyhenderson/go-codeowners
 [doc-image]: https://pkg.go.dev/badge/github.com/hairyhenderson/go-codeowners.svg
