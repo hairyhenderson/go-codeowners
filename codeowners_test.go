@@ -45,12 +45,18 @@ docs/**	@org/docteam @joe`
 # precedence. When someone opens a pull request that only
 # modifies JS files, only @js-owner and not the global
 # owner(s) will be requested for a review.
-*.js	@js-owner
+*.js    @js-owner #This is an inline comment.
 
 # You can also use email addresses if you prefer. They'll be
 # used to look up users just like we do for commit author
 # emails.
 *.go docs@example.com
+
+# Teams can be specified as code owners as well. Teams should
+# be identified in the format @org/team-name. Teams must have
+# explicit write access to the repository. In this example,
+# the octocats team in the octo-org organization owns all .txt files.
+*.txt @octo-org/octocats
 
 # In this example, @doctocat owns any files in the build/logs
 # directory at the root of the repository and any of its
@@ -67,17 +73,37 @@ docs/*  docs@example.com
 apps/ @octocat
 
 # In this example, @doctocat owns any file in the '/docs'
-# directory in the root of your repository.
+# directory in the root of your repository and any of its
+# subdirectories.
 /docs/ @doctocat
+
+# In this example, any change inside the '/scripts' directory
+# will require approval from @doctocat or @octocat.
+/scripts/ @doctocat @octocat
+
+# In this example, @octocat owns any file in a '/logs' directory such as
+# '/build/logs', '/scripts/logs', and '/deeply/nested/logs'. Any changes
+# in a '/logs' directory will require approval from @octocat.
+**/logs @octocat
+
+# In this example, @octocat owns any file in the '/apps'
+# directory in the root of your repository except for the '/apps/github'
+# subdirectory, as its owners are left empty.
+/apps/ @octocat
+/apps/github
 
   foobar/ @fooowner
 
 \#foo/ @hashowner
 
+[section]
 docs/*.md @mdowner
 
 # this example tests an escaped space in the path
 space/test\ space/ @spaceowner
+
+# should cover dir1/* etc...
+dir*/ @dirprefix
 `
 
 	codeowners []Codeowner
@@ -180,8 +206,8 @@ func TestFullParseCodeowners(t *testing.T) {
 		{"/docs/README.md", []string{"@mdowner"}},
 		// XXX: uncertain about this one
 		{"blah/docs/README.md", []string{"docs@example.com"}},
-		{"foo.txt", []string{"@global-owner1", "@global-owner2"}},
-		{"foo/bar.txt", []string{"@global-owner1", "@global-owner2"}},
+		{"foo.bar", []string{"@global-owner1", "@global-owner2"}},
+		{"foo/bar.bar", []string{"@global-owner1", "@global-owner2"}},
 		{"foo.js", []string{"@js-owner"}},
 		{"foo/bar.js", []string{"@js-owner"}},
 		{"foo.go", []string{"docs@example.com"}},
@@ -190,7 +216,7 @@ func TestFullParseCodeowners(t *testing.T) {
 		{"build/logs/foo.go", []string{"@doctocat"}},
 		{"build/logs/foo/bar.go", []string{"@doctocat"}},
 		// not relative to root
-		{"foo/build/logs/foo.go", []string{"docs@example.com"}},
+		{"foo/build/logs/foo.go", []string{"@octocat"}},
 		// docs anywhere
 		{"foo/docs/foo.js", []string{"docs@example.com"}},
 		{"foo/bar/docs/foo.js", []string{"docs@example.com"}},
@@ -200,6 +226,8 @@ func TestFullParseCodeowners(t *testing.T) {
 		{"docs/foo.js", []string{"@doctocat"}},
 		{"/docs/foo.js", []string{"@doctocat"}},
 		{"/space/test space/doc1.txt", []string{"@spaceowner"}},
+		{"somefile.txt", []string{"@octo-org/octocats"}},
+		{"dir1/hello/world", []string{"@dirprefix"}},
 	}
 
 	for _, d := range data {
@@ -260,6 +288,16 @@ func TestCombineEscapedSpaces(t *testing.T) {
 			assert.Equal(t, d.expected, combineEscapedSpaces(d.fields))
 		})
 	}
+}
+
+func TestGetPattern(t *testing.T) {
+	re := getPattern("**/logs/")
+	assert.Equal(t, "^(|.*/)logs", re.String())
+
+	// assert.True(t, re.MatchString("logs/foo"))
+	// assert.True(t, re.MatchString("a/logs/foo"))
+	// assert.True(t, re.MatchString("a/b/logs/foo"))
+	assert.True(t, re.MatchString("a/b/c/logs"))
 }
 
 func cwd() string {

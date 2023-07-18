@@ -126,18 +126,24 @@ func parseCodeowners(r io.Reader) []Codeowner {
 	s := bufio.NewScanner(r)
 	for s.Scan() {
 		fields := strings.Fields(s.Text())
+
+		// full-line comments are ignored, inline comments handled below
 		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
 			continue
 		}
+
 		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields)-1], "]") {
 			continue
 		}
+
 		if len(fields) > 1 {
 			fields = combineEscapedSpaces(fields)
+			fields = removeInlineComments(fields)
 			c, _ := NewCodeowner(fields[0], fields[1:])
 			co = append(co, c)
 		}
 	}
+
 	return co
 }
 
@@ -152,10 +158,22 @@ func combineEscapedSpaces(fields []string) []string {
 			outField = strings.Join([]string{strings.TrimRight(outField, escape), fields[i+1]}, " ")
 			i++
 		}
+
 		outFields = append(outFields, outField)
 	}
 
 	return outFields
+}
+
+// removeInlineComments - lines can end with inline comments, remove them
+func removeInlineComments(fields []string) []string {
+	for i := 0; i < len(fields); i++ {
+		if strings.HasPrefix(fields[i], "#") {
+			return fields[:i]
+		}
+	}
+
+	return fields
 }
 
 // NewCodeowner -
@@ -219,7 +237,7 @@ func getPattern(line string) *regexp.Regexp {
 	line = regexp.MustCompile(`\*`).ReplaceAllString(line, `([^/]*)`)
 
 	// Handle escaping the "?" char
-	line = strings.ReplaceAll(line, "?", `\?`)
+	line = strings.ReplaceAll(line, "?", `.?`)
 
 	line = strings.ReplaceAll(line, magicStar, "*")
 
