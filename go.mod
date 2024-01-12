@@ -1,4 +1,4 @@
-module github.com/hairyhenderson/go-codeowners
+module github.com/matteosilv/go-codeowners
 
 go 1.20
 
