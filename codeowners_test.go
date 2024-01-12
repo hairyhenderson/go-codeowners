@@ -86,7 +86,7 @@ space/test\ space/ @spaceowner
 func TestParseCodeowners(t *testing.T) {
 	t.Parallel()
 	r := bytes.NewBufferString(sample)
-	c := parseCodeowners(r)
+	c, _ := parseCodeowners(r)
 	expected := []Codeowner{
 		co("*", []string{"@everyone"}),
 		co("foobar/", []string{"someone@else.com"}),
@@ -98,7 +98,7 @@ func TestParseCodeowners(t *testing.T) {
 func TestParseCodeownersSections(t *testing.T) {
 	t.Parallel()
 	r := bytes.NewBufferString(sample4)
-	c := parseCodeowners(r)
+	c, _ := parseCodeowners(r)
 	expected := []Codeowner{
 		co("*", []string{"@everyone"}),
 		co("*/foo", []string{"@everyoneelse"}),
@@ -111,7 +111,7 @@ func BenchmarkParseCodeowners(b *testing.B) {
 	var c []Codeowner
 
 	for n := 0; n < b.N; n++ {
-		c = parseCodeowners(r)
+		c, _ = parseCodeowners(r)
 	}
 
 	codeowners = c
@@ -164,7 +164,7 @@ func co(pattern string, owners []string) Codeowner {
 func TestFullParseCodeowners(t *testing.T) {
 	t.Parallel()
 
-	c := parseCodeowners(strings.NewReader(fullSample))
+	c, _ := parseCodeowners(strings.NewReader(fullSample))
 	codeowners := &Codeowners{
 		repoRoot: "/build",
 		Patterns: c,
