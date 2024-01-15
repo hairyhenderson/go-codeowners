@@ -124,21 +124,39 @@ func FromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
 	return co, nil
 }
 
+func isSection(line string) bool {
+	return strings.HasPrefix(line, "^") || strings.HasPrefix(line, "[")
+}
+
 // parseCodeowners parses a list of Codeowners from a Reader
 func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 	co := []Codeowner{}
 	s := bufio.NewScanner(r)
+	var defaultOwners []string
 	for s.Scan() {
-		fields := strings.Fields(s.Text())
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
+		line := s.Text()
+		if isSection(line) {
+			defaultOwners = nil
+			index := strings.LastIndex(line, "]")
+			if index != -1 && len(line) > index+1 {
+				defaultOwners = strings.Fields(strings.TrimSpace(line[index+1:]))
+			}
 			continue
 		}
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields)-1], "]") {
+		fields := strings.Fields(line)
+
+		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
 			continue
 		}
 		if len(fields) > 1 {
 			fields = combineEscapedSpaces(fields)
 			c, err := NewCodeowner(fields[0], fields[1:])
+			if err != nil {
+				return nil, err
+			}
+			co = append(co, c)
+		} else if len(fields) == 1 && defaultOwners != nil {
+			c, err := NewCodeowner(fields[0], defaultOwners)
 			if err != nil {
 				return nil, err
 			}

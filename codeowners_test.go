@@ -80,8 +80,37 @@ docs/*.md @mdowner
 space/test\ space/ @spaceowner
 `
 
+	gitlabSections = `# This is a GitLab section with default owners.
+[Team 1][1] @default1 @default2
+*.js	@js-owner
+*.txt
+
+# This is another section with new defaults.
+[Team 2] @default3 @default4
+*.java @java-owner
+*
+
+# This is an optional sections without defaults.
+^[Team 3]
+*.go @team-1
+`
+
 	codeowners []Codeowner
 )
+
+func TestParseGitLabSectionsWithDefaults(t *testing.T) {
+	t.Parallel()
+	r := bytes.NewBufferString(gitlabSections)
+	c, _ := parseCodeowners(r)
+	expected := []Codeowner{
+		co("*.js", []string{"@js-owner"}),
+		co("*.txt", []string{"@default1", "@default2"}),
+		co("*.java", []string{"@java-owner"}),
+		co("*", []string{"@default3", "@default4"}),
+		co("*.go", []string{"@team-1"}),
+	}
+	assert.Equal(t, expected, c)
+}
 
 func TestParseCodeowners(t *testing.T) {
 	t.Parallel()
