@@ -136,11 +136,7 @@ func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 	for s.Scan() {
 		line := s.Text()
 		if isSection(line) {
-			defaultOwners = nil
-			index := strings.LastIndex(line, "]")
-			if index != -1 && len(line) > index+1 {
-				defaultOwners = strings.Fields(strings.TrimSpace(line[index+1:]))
-			}
+			defaultOwners = parseDefaultOwners(line)
 			continue
 		}
 		fields := strings.Fields(line)
@@ -164,6 +160,14 @@ func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 		}
 	}
 	return co, nil
+}
+
+func parseDefaultOwners(line string) []string {
+	index := strings.LastIndex(line, "]")
+	if index != -1 && len(line) > index+1 {
+		return strings.Fields(strings.TrimSpace(line[index+1:]))
+	}
+	return nil
 }
 
 // if any of the elements ends with a \, it was an escaped space
