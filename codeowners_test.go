@@ -80,13 +80,42 @@ docs/*.md @mdowner
 space/test\ space/ @spaceowner
 `
 
+	gitlabSections = `# This is a GitLab section with default owners.
+[Team 1][1] @default1 @default2
+*.js	@js-owner
+*.txt
+
+# This is another section with new defaults.
+[Team 2] @default3 @default4
+*.java @java-owner
+*
+
+# This is an optional sections without defaults.
+^[Team 3]
+*.go @team-1
+`
+
 	codeowners []Codeowner
 )
+
+func TestParseGitLabSectionsWithDefaults(t *testing.T) {
+	t.Parallel()
+	r := bytes.NewBufferString(gitlabSections)
+	c, _ := parseCodeowners(r)
+	expected := []Codeowner{
+		co("*.js", []string{"@js-owner"}),
+		co("*.txt", []string{"@default1", "@default2"}),
+		co("*.java", []string{"@java-owner"}),
+		co("*", []string{"@default3", "@default4"}),
+		co("*.go", []string{"@team-1"}),
+	}
+	assert.Equal(t, expected, c)
+}
 
 func TestParseCodeowners(t *testing.T) {
 	t.Parallel()
 	r := bytes.NewBufferString(sample)
-	c := parseCodeowners(r)
+	c, _ := parseCodeowners(r)
 	expected := []Codeowner{
 		co("*", []string{"@everyone"}),
 		co("foobar/", []string{"someone@else.com"}),
@@ -98,7 +127,7 @@ func TestParseCodeowners(t *testing.T) {
 func TestParseCodeownersSections(t *testing.T) {
 	t.Parallel()
 	r := bytes.NewBufferString(sample4)
-	c := parseCodeowners(r)
+	c, _ := parseCodeowners(r)
 	expected := []Codeowner{
 		co("*", []string{"@everyone"}),
 		co("*/foo", []string{"@everyoneelse"}),
@@ -111,7 +140,7 @@ func BenchmarkParseCodeowners(b *testing.B) {
 	var c []Codeowner
 
 	for n := 0; n < b.N; n++ {
-		c = parseCodeowners(r)
+		c, _ = parseCodeowners(r)
 	}
 
 	codeowners = c
@@ -164,7 +193,7 @@ func co(pattern string, owners []string) Codeowner {
 func TestFullParseCodeowners(t *testing.T) {
 	t.Parallel()
 
-	c := parseCodeowners(strings.NewReader(fullSample))
+	c, _ := parseCodeowners(strings.NewReader(fullSample))
 	codeowners := &Codeowners{
 		repoRoot: "/build",
 		Patterns: c,

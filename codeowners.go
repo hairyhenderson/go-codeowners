@@ -116,29 +116,58 @@ func FromReader(r io.Reader, repoRoot string) (*Codeowners, error) {
 	co := &Codeowners{
 		repoRoot: repoRoot,
 	}
-	co.Patterns = parseCodeowners(r)
+	patterns, err := parseCodeowners(r)
+	if err != nil {
+		return nil, err
+	}
+	co.Patterns = patterns
 	return co, nil
 }
 
+func isSection(line string) bool {
+	return strings.HasPrefix(line, "^") || strings.HasPrefix(line, "[")
+}
+
 // parseCodeowners parses a list of Codeowners from a Reader
-func parseCodeowners(r io.Reader) []Codeowner {
+func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 	co := []Codeowner{}
 	s := bufio.NewScanner(r)
+	var defaultOwners []string
 	for s.Scan() {
-		fields := strings.Fields(s.Text())
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
+		line := s.Text()
+		if isSection(line) {
+			defaultOwners = parseDefaultOwners(line)
 			continue
 		}
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "[") && strings.HasSuffix(fields[len(fields)-1], "]") {
+		fields := strings.Fields(line)
+
+		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
 			continue
 		}
 		if len(fields) > 1 {
 			fields = combineEscapedSpaces(fields)
-			c, _ := NewCodeowner(fields[0], fields[1:])
+			c, err := NewCodeowner(fields[0], fields[1:])
+			if err != nil {
+				return nil, err
+			}
+			co = append(co, c)
+		} else if len(fields) == 1 && defaultOwners != nil {
+			c, err := NewCodeowner(fields[0], defaultOwners)
+			if err != nil {
+				return nil, err
+			}
 			co = append(co, c)
 		}
 	}
-	return co
+	return co, nil
+}
+
+func parseDefaultOwners(line string) []string {
+	index := strings.LastIndex(line, "]")
+	if index != -1 && len(line) > index+1 {
+		return strings.Fields(strings.TrimSpace(line[index+1:]))
+	}
+	return nil
 }
 
 // if any of the elements ends with a \, it was an escaped space
@@ -160,7 +189,10 @@ func combineEscapedSpaces(fields []string) []string {
 
 // NewCodeowner -
 func NewCodeowner(pattern string, owners []string) (Codeowner, error) {
-	re := getPattern(pattern)
+	re, err := getPattern(pattern)
+	if err != nil {
+		return Codeowner{}, err
+	}
 	c := Codeowner{
 		Pattern: pattern,
 		re:      re,
@@ -190,7 +222,7 @@ func (c *Codeowners) Owners(path string) []string {
 
 // based on github.com/sabhiram/go-gitignore
 // but modified so that 'dir/*' only matches files in 'dir/'
-func getPattern(line string) *regexp.Regexp {
+func getPattern(line string) (*regexp.Regexp, error) {
 	// when # or ! is escaped with a \
 	if regexp.MustCompile(`^(\\#|\\!)`).MatchString(line) {
 		line = line[1:]
@@ -235,7 +267,5 @@ func getPattern(line string) *regexp.Regexp {
 	} else {
 		expr = "^(|.*/)" + expr
 	}
-	pattern, _ := regexp.Compile(expr)
-
-	return pattern
+	return regexp.Compile(expr)
 }
