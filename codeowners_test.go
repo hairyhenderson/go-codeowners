@@ -78,6 +78,10 @@ docs/*.md @mdowner
 
 # this example tests an escaped space in the path
 space/test\ space/ @spaceowner
+
+# In this example, @infra owns any file and directory in the
+# '/terraform' directory in the root of your repository.
+/terraform @infra
 `
 
 	gitlabSections = `# This is a GitLab section with default owners.
@@ -229,6 +233,7 @@ func TestFullParseCodeowners(t *testing.T) {
 		{"docs/foo.js", []string{"@doctocat"}},
 		{"/docs/foo.js", []string{"@doctocat"}},
 		{"/space/test space/doc1.txt", []string{"@spaceowner"}},
+		{"/terraform/kubernetes", []string{"@infra"}},
 	}
 
 	for _, d := range data {
@@ -261,6 +266,15 @@ func TestOwners(t *testing.T) {
 		{[]Codeowner{
 			co("*", foo),
 			co("/a/**", bar)}, "/a/bb/file", bar},
+		{[]Codeowner{
+			co("*", []string{"@foo", "@bar"}),
+			co("/bar/", bar)}, "/bar/quux", bar},
+		{[]Codeowner{
+			co("*", []string{"@foo", "@bar"}),
+			co("/bar", bar)}, "/bar", bar},
+		{[]Codeowner{
+			co("*", []string{"@foo", "@bar"}),
+			co("/bar", bar)}, "/bar/quux", bar},
 	}
 
 	for _, d := range data {

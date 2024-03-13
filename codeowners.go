@@ -259,8 +259,10 @@ func getPattern(line string) (*regexp.Regexp, error) {
 	var expr = ""
 	if strings.HasSuffix(line, "/") {
 		expr = line + "(|.*)$"
-	} else {
+	} else if strings.HasSuffix(line, "/([^/]*)") {
 		expr = line + "$"
+	} else {
+		expr = line + "($|/.+$)"
 	}
 	if strings.HasPrefix(expr, "/") {
 		expr = "^(|/)" + expr[1:]
