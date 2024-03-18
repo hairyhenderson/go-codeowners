@@ -256,18 +256,22 @@ func getPattern(line string) (*regexp.Regexp, error) {
 	line = strings.ReplaceAll(line, magicStar, "*")
 
 	// Temporary regex
-	var expr = ""
-	if strings.HasSuffix(line, "/") {
+	expr := ""
+
+	switch {
+	case strings.HasSuffix(line, "/"):
 		expr = line + "(|.*)$"
-	} else if strings.HasSuffix(line, "/([^/]*)") {
+	case strings.HasSuffix(line, "/([^/]*)"):
 		expr = line + "$"
-	} else {
+	default:
 		expr = line + "($|/.+$)"
 	}
+
 	if strings.HasPrefix(expr, "/") {
 		expr = "^(|/)" + expr[1:]
 	} else {
 		expr = "^(|.*/)" + expr
 	}
+
 	return regexp.Compile(expr)
 }
