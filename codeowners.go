@@ -264,7 +264,7 @@ func getPattern(line string) (*regexp.Regexp, error) {
 	case strings.HasSuffix(line, "/([^/]*)"):
 		expr = line + "$"
 	default:
-		expr = line + "($|/.+$)"
+		expr = line + "($|/.*$)"
 	}
 
 	if strings.HasPrefix(expr, "/") {
