@@ -57,6 +57,11 @@ docs/**	@org/docteam @joe`
 # subdirectories.
 /build/logs/ @doctocat
 
+# In this example, @fooowner owns any files in the /cells/foo
+# directory at the root of the repository and any of its
+# subdirectories and files.
+/cells/foo @fooowner
+
 # The 'docs/*' pattern will match files like
 # 'docs/getting-started.md' but not further nested files like
 # 'docs/build-app/troubleshooting.md'.
@@ -234,6 +239,11 @@ func TestFullParseCodeowners(t *testing.T) {
 		{"/docs/foo.js", []string{"@doctocat"}},
 		{"/space/test space/doc1.txt", []string{"@spaceowner"}},
 		{"/terraform/kubernetes", []string{"@infra"}},
+
+		{"/cells/foo", []string{"@fooowner"}},
+		{"/cells/foo/", []string{"@fooowner"}},
+		{"/cells/foo/bar", []string{"@fooowner"}},
+		{"/cells/foo/bar/quux", []string{"@fooowner"}},
 	}
 
 	for _, d := range data {
