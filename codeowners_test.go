@@ -145,10 +145,12 @@ func TestParseCodeownersSections(t *testing.T) {
 }
 
 func BenchmarkParseCodeowners(b *testing.B) {
-	r := bytes.NewBufferString(sample)
 	var c []Codeowner
 
 	for n := 0; n < b.N; n++ {
+		b.StopTimer()
+		r := bytes.NewBufferString(sample)
+		b.StartTimer()
 		c, _ = parseCodeowners(r)
 	}
 
