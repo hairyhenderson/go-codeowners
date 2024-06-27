@@ -223,21 +223,33 @@ func (c *Codeowners) Owners(path string) []string {
 	return nil
 }
 
+// precompile all regular expressions
+var (
+	reCommentIgnore = regexp.MustCompile(`^(\\#|\\!)`)
+	rePrependSlash  = regexp.MustCompile(`([^\/+])/.*\*\.`)
+	reEscapeDot     = regexp.MustCompile(`\.`)
+	reDoubleStar1   = regexp.MustCompile(`/\*\*/`)
+	reDoubleStar2   = regexp.MustCompile(`\*\*/`)
+	reDoubleStar3   = regexp.MustCompile(`/\*\*`)
+	reEscapeStar1   = regexp.MustCompile(`\\\*`)
+	reEscapeStar2   = regexp.MustCompile(`\*`)
+)
+
 // based on github.com/sabhiram/go-gitignore
 // but modified so that 'dir/*' only matches files in 'dir/'
 func getPattern(line string) (*regexp.Regexp, error) {
 	// when # or ! is escaped with a \
-	if regexp.MustCompile(`^(\\#|\\!)`).MatchString(line) {
+	if reCommentIgnore.MatchString(line) {
 		line = line[1:]
 	}
 
 	// If we encounter a foo/*.blah in a folder, prepend the / char
-	if regexp.MustCompile(`([^\/+])/.*\*\.`).MatchString(line) && line[0] != '/' {
+	if rePrependSlash.MatchString(line) && line[0] != '/' {
 		line = "/" + line
 	}
 
 	// Handle escaping the "." char
-	line = regexp.MustCompile(`\.`).ReplaceAllString(line, `\.`)
+	line = reEscapeDot.ReplaceAllString(line, `\.`)
 
 	magicStar := "#$~"
 
@@ -245,13 +257,13 @@ func getPattern(line string) (*regexp.Regexp, error) {
 	if strings.HasPrefix(line, "/**/") {
 		line = line[1:]
 	}
-	line = regexp.MustCompile(`/\*\*/`).ReplaceAllString(line, `(/|/.+/)`)
-	line = regexp.MustCompile(`\*\*/`).ReplaceAllString(line, `(|.`+magicStar+`/)`)
-	line = regexp.MustCompile(`/\*\*`).ReplaceAllString(line, `(|/.`+magicStar+`)`)
+	line = reDoubleStar1.ReplaceAllString(line, `(/|/.+/)`)
+	line = reDoubleStar2.ReplaceAllString(line, `(|.`+magicStar+`/)`)
+	line = reDoubleStar3.ReplaceAllString(line, `(|/.`+magicStar+`)`)
 
 	// Handle escaping the "*" char
-	line = regexp.MustCompile(`\\\*`).ReplaceAllString(line, `\`+magicStar)
-	line = regexp.MustCompile(`\*`).ReplaceAllString(line, `([^/]*)`)
+	line = reEscapeStar1.ReplaceAllString(line, `\`+magicStar)
+	line = reEscapeStar2.ReplaceAllString(line, `([^/]*)`)
 
 	// Handle escaping the "?" char
 	line = strings.ReplaceAll(line, "?", `\?`)
