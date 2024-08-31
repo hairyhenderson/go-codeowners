@@ -1,10 +1,6 @@
 linters-settings:
   govet:
-    check-shadowing: true
-    enable:
-      - fieldalignment
-  golint:
-    min-confidence: 0
+    enable-all: true
   gocyclo:
     min-complexity: 10
   dupl:
@@ -24,11 +20,11 @@ linters:
   enable:
     - asciicheck
     - bodyclose
+    - copyloopvar
     # - dogsled
     - dupl
     - errcheck
     - exhaustive
-    - exportloopref
     - funlen
     - gci
     - gochecknoglobals
