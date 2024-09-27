@@ -13,6 +13,9 @@ import (
 	"strings"
 )
 
+// ErrNoCodeownersFound is returned when no CODEOWNERS file is found
+var ErrNoCodeownersFound = errors.New("no CODEOWNERS found")
+
 // Codeowners - patterns/owners mappings for the given repo
 type Codeowners struct {
 	repoRoot string
@@ -106,7 +109,7 @@ func FromFileWithFS(fsys fs.FS, path string) (*Codeowners, error) {
 		return nil, err
 	}
 	if r == nil {
-		return nil, fmt.Errorf("no CODEOWNERS found in %s", path)
+		return nil, fmt.Errorf("%w in %s", ErrNoCodeownersFound, path)
 	}
 	return FromReader(r, root)
 }
