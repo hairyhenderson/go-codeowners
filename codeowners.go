@@ -223,21 +223,26 @@ func (c *Codeowners) Owners(path string) []string {
 	return nil
 }
 
+// precompile all regular expressions
+var (
+	rePrependSlash = regexp.MustCompile(`([^\/+])/.*\*\.`)
+)
+
 // based on github.com/sabhiram/go-gitignore
 // but modified so that 'dir/*' only matches files in 'dir/'
 func getPattern(line string) (*regexp.Regexp, error) {
 	// when # or ! is escaped with a \
-	if regexp.MustCompile(`^(\\#|\\!)`).MatchString(line) {
+	if strings.HasPrefix(line, `\#`) || strings.HasPrefix(line, `\!`) {
 		line = line[1:]
 	}
 
 	// If we encounter a foo/*.blah in a folder, prepend the / char
-	if regexp.MustCompile(`([^\/+])/.*\*\.`).MatchString(line) && line[0] != '/' {
+	if rePrependSlash.MatchString(line) && line[0] != '/' {
 		line = "/" + line
 	}
 
 	// Handle escaping the "." char
-	line = regexp.MustCompile(`\.`).ReplaceAllString(line, `\.`)
+	line = strings.ReplaceAll(line, ".", `\.`)
 
 	magicStar := "#$~"
 
@@ -245,13 +250,13 @@ func getPattern(line string) (*regexp.Regexp, error) {
 	if strings.HasPrefix(line, "/**/") {
 		line = line[1:]
 	}
-	line = regexp.MustCompile(`/\*\*/`).ReplaceAllString(line, `(/|/.+/)`)
-	line = regexp.MustCompile(`\*\*/`).ReplaceAllString(line, `(|.`+magicStar+`/)`)
-	line = regexp.MustCompile(`/\*\*`).ReplaceAllString(line, `(|/.`+magicStar+`)`)
+	line = strings.ReplaceAll(line, `/**/`, `(/|/.+/)`)
+	line = strings.ReplaceAll(line, `**/`, `(|.`+magicStar+`/)`)
+	line = strings.ReplaceAll(line, `/**`, `(|/.`+magicStar+`)`)
 
 	// Handle escaping the "*" char
-	line = regexp.MustCompile(`\\\*`).ReplaceAllString(line, `\`+magicStar)
-	line = regexp.MustCompile(`\*`).ReplaceAllString(line, `([^/]*)`)
+	line = strings.ReplaceAll(line, `\*`, `\`+magicStar)
+	line = strings.ReplaceAll(line, `*`, `([^/]*)`)
 
 	// Handle escaping the "?" char
 	line = strings.ReplaceAll(line, "?", `\?`)
