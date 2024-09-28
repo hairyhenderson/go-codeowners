@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+* Ignore block and inline comments ([#43](https://github.com/hairyhenderson/go-codeowners/issues/43))
+
 ## [0.6.0](https://github.com/hairyhenderson/go-codeowners/compare/v0.5.0...v0.6.0) (2024-09-27)
 
 

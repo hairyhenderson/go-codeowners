@@ -144,7 +144,17 @@ func parseCodeowners(r io.Reader) ([]Codeowner, error) {
 		}
 		fields := strings.Fields(line)
 
-		if len(fields) > 0 && strings.HasPrefix(fields[0], "#") {
+		// Remove comments.
+		if len(fields) > 0 {
+			for i := range fields {
+				if strings.HasPrefix(fields[i], "#") {
+					fields = fields[:i]
+					break
+				}
+			}
+		}
+
+		if len(fields) == 0 {
 			continue
 		}
 		if len(fields) > 1 {

@@ -20,7 +20,7 @@ var (
 	sample = `# comment
 *	@everyone
 
-   foobar/  someone@else.com
+   foobar/  someone@else.com # inline comment
 
 docs/**	@org/docteam @joe`
 	sample2 = `* @hairyhenderson`
