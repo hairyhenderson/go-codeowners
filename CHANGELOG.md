@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+* Check for `CODEOWNERS` file according to both [GitHub](https://docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners#codeowners-file-location) and [GitLab](https://docs.gitlab.com/ee/user/project/codeowners/#codeowners-file) documentation ([#44](https://github.com/hairyhenderson/go-codeowners/issues/44))
+
 ## [0.6.0](https://github.com/hairyhenderson/go-codeowners/compare/v0.5.0...v0.6.0) (2024-09-27)
 
 
