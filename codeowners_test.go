@@ -162,6 +162,9 @@ func TestFindCodeownersFile(t *testing.T) {
 		"src/.github/CODEOWNERS":      &fstest.MapFile{Data: []byte(sample)},
 		"src/foo/CODEOWNERS":          &fstest.MapFile{Data: []byte(sample2)},
 		"src/foo/qux/docs/CODEOWNERS": &fstest.MapFile{Data: []byte(sample3)},
+		"src/bar/CODEOWNERS":          &fstest.MapFile{Data: []byte(sample2)},
+		"src/bar/.github/CODEOWNERS":  &fstest.MapFile{Data: []byte(sample)},
+		"src/bar/.gitlab/CODEOWNERS":  &fstest.MapFile{Data: []byte(sample3)},
 	}
 
 	r, root, err := findCodeownersFile(fsys, "src")
@@ -191,6 +194,14 @@ func TestFindCodeownersFile(t *testing.T) {
 	r, _, err = findCodeownersFile(fsys, ".")
 	require.NoError(t, err)
 	assert.Nil(t, r)
+
+	r, root, err = findCodeownersFile(fsys, "src/bar")
+	require.NoError(t, err)
+	assert.NotNil(t, r)
+	assert.Equal(t, "src/bar", root)
+
+	b, _ = io.ReadAll(r)
+	assert.Equal(t, sample, string(b))
 }
 
 func co(pattern string, owners []string) Codeowner {

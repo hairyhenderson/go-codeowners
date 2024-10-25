@@ -51,7 +51,7 @@ func dirExists(fsys fs.FS, path string) (bool, error) {
 func findCodeownersFile(fsys fs.FS, wd string) (io.Reader, string, error) {
 	dir := wd
 	for {
-		for _, p := range []string{".", "docs", ".github", ".gitlab"} {
+		for _, p := range []string{".github", ".", "docs", ".gitlab"} {
 			pth := path.Join(dir, p)
 			exists, err := dirExists(fsys, pth)
 			if err != nil {
