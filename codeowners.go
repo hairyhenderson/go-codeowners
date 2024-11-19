@@ -218,20 +218,27 @@ func NewCodeowner(pattern string, owners []string) (Codeowner, error) {
 // Owners - return the list of code owners for the given path
 // (within the repo root)
 func (c *Codeowners) Owners(path string) []string {
+	if i := c.PatternIndex(path); i >= 0 {
+		return c.Patterns[i].Owners
+	}
+	return nil
+}
+
+// PatternIndex - return the index of the pattern that matches the given path
+// (within the repo root)
+func (c *Codeowners) PatternIndex(path string) int {
 	if strings.HasPrefix(path, c.repoRoot) {
 		path = strings.Replace(path, c.repoRoot, "", 1)
 	}
 
 	// Order is important; the last matching pattern takes the most precedence.
 	for i := len(c.Patterns) - 1; i >= 0; i-- {
-		p := c.Patterns[i]
-
-		if p.re.MatchString(path) {
-			return p.Owners
+		if c.Patterns[i].re.MatchString(path) {
+			return i
 		}
 	}
 
-	return nil
+	return -1
 }
 
 // precompile all regular expressions
