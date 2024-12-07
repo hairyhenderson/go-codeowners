@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.7.0](https://github.com/hairyhenderson/go-codeowners/compare/v0.6.1...v0.7.0) (2024-12-07)
+
+
+### Features
+
+* add PatternIndex method ([#48](https://github.com/hairyhenderson/go-codeowners/issues/48)) ([a5c2e59](https://github.com/hairyhenderson/go-codeowners/commit/a5c2e593dcbe38fa52c24c95a72d1ca3f5e47ee8))
+
+
+### Dependencies
+
+* **go:** Bump github.com/stretchr/testify from 1.9.0 to 1.10.0 ([#49](https://github.com/hairyhenderson/go-codeowners/issues/49)) ([4f55176](https://github.com/hairyhenderson/go-codeowners/commit/4f551769326fc31237d06b29a4a0497c78bd882f))
+
 ## [0.6.1](https://github.com/hairyhenderson/go-codeowners/compare/v0.6.0...v0.6.1) (2024-10-25)
 
 
