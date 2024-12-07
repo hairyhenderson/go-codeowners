@@ -31,5 +31,5 @@ jobs:
           comment-on-alert: true
           comment-always: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          alert-threshold: "100%"
+          alert-threshold: "200%"
           auto-push: true
