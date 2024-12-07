@@ -8,7 +8,8 @@ updates:
     time: "02:00"
     timezone: Canada/Eastern
   open-pull-requests-limit: 10
-  prefix: deps(actions)
+  commit-message:
+    prefix: deps(go)
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
@@ -17,4 +18,5 @@ updates:
     time: "02:00"
     timezone: Canada/Eastern
   open-pull-requests-limit: 10
-  prefix: deps(actions)
+  commit-message:
+    prefix: deps(actions)
