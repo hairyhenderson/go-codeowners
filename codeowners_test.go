@@ -157,6 +157,25 @@ func BenchmarkParseCodeowners(b *testing.B) {
 	codeowners = c
 }
 
+func BenchmarkOwners(b *testing.B) {
+	c, _ := FromReader(strings.NewReader(fullSample), "")
+	data := []string{
+		"#foo/bar.go",
+		"blah/docs/README.md",
+		"foo/bar/docs/foo/foo.js",
+		"/space/test space/doc1.txt",
+		"/terraform/kubernetes",
+	}
+
+	for _, d := range data {
+		b.Run(d, func(b *testing.B) {
+			for n := 0; n < b.N; n++ {
+				_ = c.Owners(d)
+			}
+		})
+	}
+}
+
 func TestFindCodeownersFile(t *testing.T) {
 	fsys := fstest.MapFS{
 		"src/.github/CODEOWNERS":      &fstest.MapFile{Data: []byte(sample)},
