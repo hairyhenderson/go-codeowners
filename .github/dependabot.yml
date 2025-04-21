@@ -4,9 +4,6 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
-    day: saturday
-    time: "02:00"
-    timezone: Canada/Eastern
   open-pull-requests-limit: 10
   commit-message:
     prefix: deps(go)
@@ -14,9 +11,6 @@ updates:
   directory: "/"
   schedule:
     interval: weekly
-    day: saturday
-    time: "02:00"
-    timezone: Canada/Eastern
   open-pull-requests-limit: 10
   commit-message:
     prefix: deps(actions)
