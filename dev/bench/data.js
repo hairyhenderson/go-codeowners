@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1745240608191,
+  "lastUpdate": 1748521009599,
   "repoUrl": "https://github.com/hairyhenderson/go-codeowners",
   "entries": {
     "Benchmark": [
@@ -10388,6 +10388,750 @@ window.BENCHMARK_DATA = {
             "value": 0,
             "unit": "allocs/op",
             "extra": "8784212 times\n4 procs"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8df28460bb5b51f2f9eb3b5ba807443a19e090cb",
+          "message": "deps(actions): bump golangci/golangci-lint-action from 7 to 8 (#59)\n\nBumps [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) from 7 to 8.\n- [Release notes](https://github.com/golangci/golangci-lint-action/releases)\n- [Commits](https://github.com/golangci/golangci-lint-action/compare/v7...v8)\n\n---\nupdated-dependencies:\n- dependency-name: golangci/golangci-lint-action\n  dependency-version: '8'\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-05-29T08:14:40-04:00",
+          "tree_id": "0cc18627269a0e5ac43c2a1d2443c16b011ff8db",
+          "url": "https://github.com/hairyhenderson/go-codeowners/commit/8df28460bb5b51f2f9eb3b5ba807443a19e090cb"
+        },
+        "date": 1748521008860,
+        "tool": "go",
+        "benches": [
+          {
+            "name": "BenchmarkParseCodeowners",
+            "value": 29227,
+            "unit": "ns/op\t   26677 B/op\t     194 allocs/op",
+            "extra": "82897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - ns/op",
+            "value": 29227,
+            "unit": "ns/op",
+            "extra": "82897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - B/op",
+            "value": 26677,
+            "unit": "B/op",
+            "extra": "82897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - allocs/op",
+            "value": 194,
+            "unit": "allocs/op",
+            "extra": "82897 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners",
+            "value": 29466,
+            "unit": "ns/op\t   26666 B/op\t     194 allocs/op",
+            "extra": "79568 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - ns/op",
+            "value": 29466,
+            "unit": "ns/op",
+            "extra": "79568 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - B/op",
+            "value": 26666,
+            "unit": "B/op",
+            "extra": "79568 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - allocs/op",
+            "value": 194,
+            "unit": "allocs/op",
+            "extra": "79568 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners",
+            "value": 29458,
+            "unit": "ns/op\t   26667 B/op\t     194 allocs/op",
+            "extra": "83065 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - ns/op",
+            "value": 29458,
+            "unit": "ns/op",
+            "extra": "83065 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - B/op",
+            "value": 26667,
+            "unit": "B/op",
+            "extra": "83065 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - allocs/op",
+            "value": 194,
+            "unit": "allocs/op",
+            "extra": "83065 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners",
+            "value": 29473,
+            "unit": "ns/op\t   26663 B/op\t     194 allocs/op",
+            "extra": "81490 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - ns/op",
+            "value": 29473,
+            "unit": "ns/op",
+            "extra": "81490 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - B/op",
+            "value": 26663,
+            "unit": "B/op",
+            "extra": "81490 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - allocs/op",
+            "value": 194,
+            "unit": "allocs/op",
+            "extra": "81490 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners",
+            "value": 29382,
+            "unit": "ns/op\t   26658 B/op\t     194 allocs/op",
+            "extra": "81100 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - ns/op",
+            "value": 29382,
+            "unit": "ns/op",
+            "extra": "81100 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - B/op",
+            "value": 26658,
+            "unit": "B/op",
+            "extra": "81100 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkParseCodeowners - allocs/op",
+            "value": 194,
+            "unit": "allocs/op",
+            "extra": "81100 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go",
+            "value": 347.8,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "6894800 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - ns/op",
+            "value": 347.8,
+            "unit": "ns/op",
+            "extra": "6894800 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "6894800 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "6894800 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go",
+            "value": 347,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "6905115 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - ns/op",
+            "value": 347,
+            "unit": "ns/op",
+            "extra": "6905115 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "6905115 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "6905115 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go",
+            "value": 348.2,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "6930840 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - ns/op",
+            "value": 348.2,
+            "unit": "ns/op",
+            "extra": "6930840 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "6930840 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "6930840 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go",
+            "value": 347.9,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "6814869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - ns/op",
+            "value": 347.9,
+            "unit": "ns/op",
+            "extra": "6814869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "6814869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "6814869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go",
+            "value": 347.6,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "6926414 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - ns/op",
+            "value": 347.6,
+            "unit": "ns/op",
+            "extra": "6926414 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "6926414 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/#foo/bar.go - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "6926414 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md",
+            "value": 2574,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "917085 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - ns/op",
+            "value": 2574,
+            "unit": "ns/op",
+            "extra": "917085 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "917085 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "917085 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md",
+            "value": 2602,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "904132 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - ns/op",
+            "value": 2602,
+            "unit": "ns/op",
+            "extra": "904132 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "904132 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "904132 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md",
+            "value": 2561,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "922534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - ns/op",
+            "value": 2561,
+            "unit": "ns/op",
+            "extra": "922534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "922534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "922534 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md",
+            "value": 2617,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "921766 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - ns/op",
+            "value": 2617,
+            "unit": "ns/op",
+            "extra": "921766 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "921766 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "921766 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md",
+            "value": 2612,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "918123 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - ns/op",
+            "value": 2612,
+            "unit": "ns/op",
+            "extra": "918123 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "918123 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/blah/docs/README.md - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "918123 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js",
+            "value": 5277,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "456052 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - ns/op",
+            "value": 5277,
+            "unit": "ns/op",
+            "extra": "456052 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "456052 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "456052 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js",
+            "value": 6054,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "396523 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - ns/op",
+            "value": 6054,
+            "unit": "ns/op",
+            "extra": "396523 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "396523 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "396523 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js",
+            "value": 5310,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "453174 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - ns/op",
+            "value": 5310,
+            "unit": "ns/op",
+            "extra": "453174 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "453174 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "453174 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js",
+            "value": 6091,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "394236 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - ns/op",
+            "value": 6091,
+            "unit": "ns/op",
+            "extra": "394236 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "394236 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "394236 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js",
+            "value": 5261,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "447009 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - ns/op",
+            "value": 5261,
+            "unit": "ns/op",
+            "extra": "447009 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "447009 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners/foo/bar/docs/foo/foo.js - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "447009 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt",
+            "value": 934.1,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "2571280 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - ns/op",
+            "value": 934.1,
+            "unit": "ns/op",
+            "extra": "2571280 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "2571280 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "2571280 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt",
+            "value": 934.9,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "2558247 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - ns/op",
+            "value": 934.9,
+            "unit": "ns/op",
+            "extra": "2558247 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "2558247 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "2558247 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt",
+            "value": 935.3,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "2564869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - ns/op",
+            "value": 935.3,
+            "unit": "ns/op",
+            "extra": "2564869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "2564869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "2564869 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt",
+            "value": 941,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "2554999 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - ns/op",
+            "value": 941,
+            "unit": "ns/op",
+            "extra": "2554999 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "2554999 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "2554999 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt",
+            "value": 934.5,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "2565696 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - ns/op",
+            "value": 934.5,
+            "unit": "ns/op",
+            "extra": "2565696 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "2565696 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//space/test_space/doc1.txt - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "2565696 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes",
+            "value": 273.7,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "8778709 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - ns/op",
+            "value": 273.7,
+            "unit": "ns/op",
+            "extra": "8778709 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "8778709 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "8778709 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes",
+            "value": 272.9,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "8786222 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - ns/op",
+            "value": 272.9,
+            "unit": "ns/op",
+            "extra": "8786222 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "8786222 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "8786222 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes",
+            "value": 273.7,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "8781484 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - ns/op",
+            "value": 273.7,
+            "unit": "ns/op",
+            "extra": "8781484 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "8781484 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "8781484 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes",
+            "value": 275,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "8784699 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - ns/op",
+            "value": 275,
+            "unit": "ns/op",
+            "extra": "8784699 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "8784699 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "8784699 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes",
+            "value": 275.8,
+            "unit": "ns/op\t       0 B/op\t       0 allocs/op",
+            "extra": "8789350 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - ns/op",
+            "value": 275.8,
+            "unit": "ns/op",
+            "extra": "8789350 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - B/op",
+            "value": 0,
+            "unit": "B/op",
+            "extra": "8789350 times\n4 procs"
+          },
+          {
+            "name": "BenchmarkOwners//terraform/kubernetes - allocs/op",
+            "value": 0,
+            "unit": "allocs/op",
+            "extra": "8789350 times\n4 procs"
           }
         ]
       }
