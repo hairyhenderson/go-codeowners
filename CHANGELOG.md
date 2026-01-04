@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.1](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.0...v0.7.1) (2026-01-04)
+
+
+### Dependencies
+
+* **actions:** bump actions/checkout from 4 to 6 ([#66](https://github.com/hairyhenderson/go-codeowners/issues/66)) ([2cdb2d6](https://github.com/hairyhenderson/go-codeowners/commit/2cdb2d64f1009b4aed72932d36daaf5990689ce1))
+* **actions:** bump actions/create-github-app-token from 1 to 2 ([#58](https://github.com/hairyhenderson/go-codeowners/issues/58)) ([e6ba277](https://github.com/hairyhenderson/go-codeowners/commit/e6ba277d866673f8287962bf0b7e28e405f0cf21))
+* **actions:** bump actions/setup-go from 4 to 5 ([#55](https://github.com/hairyhenderson/go-codeowners/issues/55)) ([0c001dc](https://github.com/hairyhenderson/go-codeowners/commit/0c001dc0be724863d04a110d9be3a229898de17a))
+* **actions:** bump golangci/golangci-lint-action from 6 to 7 ([#57](https://github.com/hairyhenderson/go-codeowners/issues/57)) ([c7a0b1a](https://github.com/hairyhenderson/go-codeowners/commit/c7a0b1ab841f1b0f278e745879b3b5d71446f7c5))
+* **actions:** bump golangci/golangci-lint-action from 7 to 8 ([#59](https://github.com/hairyhenderson/go-codeowners/issues/59)) ([8df2846](https://github.com/hairyhenderson/go-codeowners/commit/8df28460bb5b51f2f9eb3b5ba807443a19e090cb))
+
 ## [0.7.0](https://github.com/hairyhenderson/go-codeowners/compare/v0.6.1...v0.7.0) (2024-12-07)
 
 
