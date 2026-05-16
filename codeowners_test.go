@@ -15,6 +15,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+const (
+	jsOwner   = "@js-owner"
+	fooOwner  = "@fooowner"
+	docsEmail = "docs@example.com"
+	doctocat  = "@doctocat"
+	ownerFoo  = "@foo"
+	ownerBar  = "@bar"
+	testOwner = "@owner"
+)
+
 //nolint:gochecknoglobals
 var (
 	sample = `# comment
@@ -112,7 +122,7 @@ func TestParseGitLabSectionsWithDefaults(t *testing.T) {
 	r := bytes.NewBufferString(gitlabSections)
 	c, _ := parseCodeowners(r)
 	expected := []Codeowner{
-		co("*.js", []string{"@js-owner"}),
+		co("*.js", []string{jsOwner}),
 		co("*.txt", []string{"@default1", "@default2"}),
 		co("*.java", []string{"@java-owner"}),
 		co("*", []string{"@default3", "@default4"}),
@@ -246,36 +256,36 @@ func TestFullParseCodeowners(t *testing.T) {
 		owners []string
 	}{
 		{"#foo/bar.go", []string{"@hashowner"}},
-		{"foobar/baz.go", []string{"@fooowner"}},
+		{"foobar/baz.go", []string{fooOwner}},
 		{"/docs/README.md", []string{"@mdowner"}},
 		// XXX: uncertain about this one
-		{"blah/docs/README.md", []string{"docs@example.com"}},
+		{"blah/docs/README.md", []string{docsEmail}},
 		{"foo.txt", []string{"@global-owner1", "@global-owner2"}},
 		{"foo/bar.txt", []string{"@global-owner1", "@global-owner2"}},
-		{"foo.js", []string{"@js-owner"}},
-		{"foo/bar.js", []string{"@js-owner"}},
-		{"foo.go", []string{"docs@example.com"}},
-		{"foo/bar.go", []string{"docs@example.com"}},
+		{"foo.js", []string{jsOwner}},
+		{"foo/bar.js", []string{jsOwner}},
+		{"foo.go", []string{docsEmail}},
+		{"foo/bar.go", []string{docsEmail}},
 		// relative to root
-		{"build/logs/foo.go", []string{"@doctocat"}},
-		{"build/logs/foo/bar.go", []string{"@doctocat"}},
+		{"build/logs/foo.go", []string{doctocat}},
+		{"build/logs/foo/bar.go", []string{doctocat}},
 		// not relative to root
-		{"foo/build/logs/foo.go", []string{"docs@example.com"}},
+		{"foo/build/logs/foo.go", []string{docsEmail}},
 		// docs anywhere
-		{"foo/docs/foo.js", []string{"docs@example.com"}},
-		{"foo/bar/docs/foo.js", []string{"docs@example.com"}},
+		{"foo/docs/foo.js", []string{docsEmail}},
+		{"foo/bar/docs/foo.js", []string{docsEmail}},
 		// but not nested
-		{"foo/bar/docs/foo/foo.js", []string{"@js-owner"}},
+		{"foo/bar/docs/foo/foo.js", []string{jsOwner}},
 		{"foo/apps/foo.js", []string{"@octocat"}},
-		{"docs/foo.js", []string{"@doctocat"}},
-		{"/docs/foo.js", []string{"@doctocat"}},
+		{"docs/foo.js", []string{doctocat}},
+		{"/docs/foo.js", []string{doctocat}},
 		{"/space/test space/doc1.txt", []string{"@spaceowner"}},
 		{"/terraform/kubernetes", []string{"@infra"}},
 
-		{"/cells/foo", []string{"@fooowner"}},
-		{"/cells/foo/", []string{"@fooowner"}},
-		{"/cells/foo/bar", []string{"@fooowner"}},
-		{"/cells/foo/bar/quux", []string{"@fooowner"}},
+		{"/cells/foo", []string{fooOwner}},
+		{"/cells/foo/", []string{fooOwner}},
+		{"/cells/foo/bar", []string{fooOwner}},
+		{"/cells/foo/bar/quux", []string{fooOwner}},
 	}
 
 	for _, d := range data {
@@ -286,8 +296,8 @@ func TestFullParseCodeowners(t *testing.T) {
 }
 
 func TestOwners(t *testing.T) {
-	foo := []string{"@foo"}
-	bar := []string{"@bar"}
+	foo := []string{ownerFoo}
+	bar := []string{ownerBar}
 	baz := []string{"@baz"}
 	data := []struct {
 		patterns []Codeowner
@@ -309,13 +319,13 @@ func TestOwners(t *testing.T) {
 			co("*", foo),
 			co("/a/**", bar)}, "/a/bb/file", bar},
 		{[]Codeowner{
-			co("*", []string{"@foo", "@bar"}),
+			co("*", []string{ownerFoo, ownerBar}),
 			co("/bar/", bar)}, "/bar/quux", bar},
 		{[]Codeowner{
-			co("*", []string{"@foo", "@bar"}),
+			co("*", []string{ownerFoo, ownerBar}),
 			co("/bar", bar)}, "/bar", bar},
 		{[]Codeowner{
-			co("*", []string{"@foo", "@bar"}),
+			co("*", []string{ownerFoo, ownerBar}),
 			co("/bar", bar)}, "/bar/quux", bar},
 	}
 
@@ -333,11 +343,11 @@ func TestCombineEscapedSpaces(t *testing.T) {
 		fields   []string
 		expected []string
 	}{
-		{[]string{"docs/", "@owner"}, []string{"docs/", "@owner"}},
-		{[]string{"docs/bob/**", "@owner"}, []string{"docs/bob/**", "@owner"}},
-		{[]string{"docs/bob\\", "test/", "@owner"}, []string{"docs/bob test/", "@owner"}},
-		{[]string{"docs/bob\\", "test/sub/final\\", "space/", "@owner"}, []string{"docs/bob test/sub/final space/", "@owner"}},
-		{[]string{"docs/bob\\", "test/another\\", "test/**", "@owner"}, []string{"docs/bob test/another test/**", "@owner"}},
+		{[]string{"docs/", testOwner}, []string{"docs/", testOwner}},
+		{[]string{"docs/bob/**", testOwner}, []string{"docs/bob/**", testOwner}},
+		{[]string{"docs/bob\\", "test/", testOwner}, []string{"docs/bob test/", testOwner}},
+		{[]string{"docs/bob\\", "test/sub/final\\", "space/", testOwner}, []string{"docs/bob test/sub/final space/", testOwner}},
+		{[]string{"docs/bob\\", "test/another\\", "test/**", testOwner}, []string{"docs/bob test/another test/**", testOwner}},
 	}
 
 	for _, d := range data {
