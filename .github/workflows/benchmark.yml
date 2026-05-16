@@ -9,6 +9,9 @@ jobs:
   benchmark:
     name: benchmark regression check
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v5
