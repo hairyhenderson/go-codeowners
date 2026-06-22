@@ -12,7 +12,7 @@ jobs:
     permissions:
       pull-requests: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: webiny/action-conventional-commits@v1.4.2
         with:
           allowed-commit-types: feat,fix,docs,deps,chore,build,ci
