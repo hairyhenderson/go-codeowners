@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.2](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.1...v0.7.2) (2026-08-08)
+
+
+### Dependencies
+
+* **actions:** bump actions/setup-go from 6 to 7 ([#74](https://github.com/hairyhenderson/go-codeowners/issues/74)) ([6619a1b](https://github.com/hairyhenderson/go-codeowners/commit/6619a1bd859c86068484ecd166d8d66a8ddb25d4))
+* **actions:** bump actions/stale from 10 to 11 ([#75](https://github.com/hairyhenderson/go-codeowners/issues/75)) ([c914317](https://github.com/hairyhenderson/go-codeowners/commit/c9143170618dde04503495c7aba49baba26c7c59))
+
 ## [0.7.1](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.0...v0.7.1) (2026-05-16)
 
 
