@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.2...v0.7.3) (2026-10-20)
+
+
+### Dependencies
+
+* update Go to 1.27.3 ([#79](https://github.com/hairyhenderson/go-codeowners/issues/79)) ([b421392](https://github.com/hairyhenderson/go-codeowners/commit/b421392a43aabcaec13a8287303a4ef878382f8a))
+
 ## [0.7.2](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.1...v0.7.2) (2026-10-16)
 
 
