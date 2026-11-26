@@ -2,7 +2,7 @@ module github.com/hairyhenderson/go-codeowners
 
 go 1.22.0
 
-toolchain go1.27.3
+toolchain go1.27.4
 
 require github.com/stretchr/testify v1.12.1
 
