@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.3](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.2...v0.7.3) (2026-11-27)
+
+
+### Dependencies
+
+* **github-actions:** pin dependencies ([#83](https://github.com/hairyhenderson/go-codeowners/issues/83)) ([199077a](https://github.com/hairyhenderson/go-codeowners/commit/199077a21d19d3fd1f06d117a3446d0929e78b4e))
+* **github-actions:** update ghcr.io/hairyhenderson/gomplate-ci-build:latest docker digest to eb9b66c ([#85](https://github.com/hairyhenderson/go-codeowners/issues/85)) ([050656b](https://github.com/hairyhenderson/go-codeowners/commit/050656b3f9350c723aa32d8973d98e20213f3103))
+* **gomod:** update go toolchain directive to v1.27.4 [security] ([#82](https://github.com/hairyhenderson/go-codeowners/issues/82)) ([33ca3cf](https://github.com/hairyhenderson/go-codeowners/commit/33ca3cfe7c701f2328dc573b5b00a015b6426b63))
+* update Go to 1.27.3 ([#79](https://github.com/hairyhenderson/go-codeowners/issues/79)) ([b421392](https://github.com/hairyhenderson/go-codeowners/commit/b421392a43aabcaec13a8287303a4ef878382f8a))
+
 ## [0.7.2](https://github.com/hairyhenderson/go-codeowners/compare/v0.7.1...v0.7.2) (2026-10-16)
 
 
